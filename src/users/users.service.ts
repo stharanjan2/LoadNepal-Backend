@@ -24,16 +24,4 @@ export class UsersService {
     await this.userRepository.save(user);
     return user;
   }
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
 }
