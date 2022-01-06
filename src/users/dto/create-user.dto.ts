@@ -1,9 +1,15 @@
-import { IsAlpha, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import Role from '../role.enum';
 export class CreateUserDto {
   @IsNotEmpty()
   readonly username: string;
+
   @IsNotEmpty()
   readonly email: string;
+
   @IsNotEmpty()
-  readonly district: string;
+  readonly password: string;
+
+  @IsNotEmpty()
+  readonly roles: Role;
 }

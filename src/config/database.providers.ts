@@ -12,6 +12,7 @@ export const databaseProviders = [
         password: '',
         database: 'nestTest',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        // synchronize: true,
       }),
   },
 ];
