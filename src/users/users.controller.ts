@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Request,
+  Headers,
   Post,
   UseGuards,
   UseInterceptors,
@@ -17,7 +18,6 @@ import Role from './role.enum';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserRO } from './user.interface';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 @Controller('users')
 export class UsersController {
@@ -27,10 +27,10 @@ export class UsersController {
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
-  @Post('user/:id')
-  @UseGuards(RoleGuard(Role.USER))
+  @Post('user')
+  @UseGuards(RoleGuard(Role.DRIVER))
   @UseGuards(JwtAuthGuard)
-  async cool(@Request() req) {
+  async cool() {
     return 'Admin role';
   }
 

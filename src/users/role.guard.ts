@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
+import { ExtractJwt } from 'passport-jwt';
+import jwt_decode from 'jwt-decode';
 
 // import RequestWithUser from '../authentication/requestWithUser.interface';
 
@@ -22,15 +24,11 @@ const RoleGuard = (role: Role): Type<CanActivate> => {
 
     async canActivate(context: ExecutionContext) {
       const request = context.switchToHttp().getRequest<any>();
+
       const user_req_body = request.body;
-      const _id = request.params.id;
-
-      const user = await this.userRepository.findOne({ id: _id });
+      const user = request.user;
+      // const user = await this.userRepository.findOne({ id: _id });
       return user?.roles.includes(role);
-      // // return user_id.email.includes(role);
-      // console.log('USer id from', user_id);
-
-      // return user_req_body?.roles.includes(role);
     }
   }
 

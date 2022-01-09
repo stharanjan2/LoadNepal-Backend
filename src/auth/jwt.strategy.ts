@@ -5,21 +5,25 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() { // private authService: AuthService
+  constructor() {
+    // private authService: AuthService
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromHeader('x-access-token'),
       ignoreExpiration: false,
       secretOrKey: 'my-secret-key',
     });
   }
-  async validate(payload: { userId: number }) {
+  async validate(payload: { userId: number; roles: string }) {
     // const user = await this.authService.validateUser(username);
     // if (!user) {
     //   throw new UnauthorizedException();
     // }
     // return user;
+    // console.log('Payload rfrom startegy', payload);
+
     return {
       userId: payload.userId,
+      roles: payload.roles,
     };
   }
 }

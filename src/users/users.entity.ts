@@ -6,9 +6,11 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BaseEntity,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import Role from './role.enum';
+import { Order } from 'src/orders/entities/order.entity';
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -31,6 +33,9 @@ export class User extends BaseEntity {
     default: Role.USER,
   })
   roles: Role;
+
+  @OneToMany(() => Order, (order) => order.client)
+  orders: Order[];
 
   @BeforeInsert()
   async hashPasswprd() {
