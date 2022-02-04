@@ -1,14 +1,16 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { User } from 'src/users/users.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'orders' })
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   order_id: Number;
@@ -41,8 +43,59 @@ export class Order extends BaseEntity {
   @IsNotEmpty()
   truck_preference: String;
 
-  @ManyToOne(() => User, (client) => client.orders)
-  client: User;
+  @IsNotEmpty()
+  @ManyToOne(() => User, (user) => user.orders)
+  user: User;
+
+  @Column()
+  vehcileId: number;
+
+  @Column()
+  user_username: String;
+
+  @Column()
+  user_phoneNumber: number;
+
+  @Column()
+  distance: number;
+
+  @Column()
+  price: number;
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isLocked: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isAccepted: boolean;
+
+  //confirmed by admin/customer to transition from type 1 pending load to type 2 pending load
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isConfirmed: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isShipped: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isDestinationReached: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  isPayementMade: boolean;
+
+  @Column()
+  additionalDeescription: String;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => User, (driver) => driver.orders)
   driver: User;

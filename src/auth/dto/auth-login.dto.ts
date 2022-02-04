@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 export class AuthLoginDto {
   @IsNotEmpty()
-  username: string;
+  phoneNumber: number;
   @IsNotEmpty()
   password: string;
 }

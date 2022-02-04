@@ -19,6 +19,7 @@ import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { UserDecorator } from './user.decorators';
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
@@ -30,15 +31,14 @@ export class UsersController {
   @Post('user')
   @UseGuards(RoleGuard(Role.DRIVER))
   @UseGuards(JwtAuthGuard)
-  async cool() {
-    return 'Admin role';
+  async cool(@UserDecorator() user) {
+    return `Admin role ${user.userId} ${user.roles}`;
   }
 
-  @UsePipes(new ValidationPipe())
-  @Post('register')
-  async create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+  // @Post('register')
+  // async create(@Body() createUserDto: CreateUserDto) {
+  //   return this.userService.create(createUserDto);
+  // }
   // async post(@Body() user: CreateUserDto): Promise<UserRO> {
   //   return this.userService.postAll(user);
   // }

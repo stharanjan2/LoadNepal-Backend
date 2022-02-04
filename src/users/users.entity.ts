@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import {
   Entity,
   Column,
@@ -7,25 +7,55 @@ import {
   BeforeInsert,
   BaseEntity,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import Role from './role.enum';
 import { Order } from 'src/orders/entities/order.entity';
-@Entity()
+import { Cipher } from 'crypto';
+@Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Exclude()
-  @Column()
-  @IsEmail()
-  email: string;
-
-  @Column({ unique: true, length: 500 })
+  @Column({ unique: true, length: 25 })
+  @Length(4, 20)
+  @IsNotEmpty()
   username: string;
 
+  @Column({ unique: true })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
   @Column()
+  @IsNotEmpty()
+  // @Length(5, 100)
   password: string;
+
+  @Column()
+  @IsNotEmpty()
+  // @Length(10, 10)
+  phoneNumber: number;
+
+  @Column()
+  city: string;
+
+  @Column()
+  district: string;
+
+  @Column()
+  state: string;
+
+  @Column({ default: '' })
+  identification: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Column({
     type: 'enum',
@@ -34,7 +64,7 @@ export class User extends BaseEntity {
   })
   roles: Role;
 
-  @OneToMany(() => Order, (order) => order.client)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 
   @BeforeInsert()

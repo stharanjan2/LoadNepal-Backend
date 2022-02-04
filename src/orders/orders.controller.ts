@@ -15,20 +15,20 @@ import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
-@Controller('orders')
+@Controller('api/test')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Post()
+  @Post('user/postOrder')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
-  async create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  async createOrder(@Body() createOrderDto: CreateOrderDto) {
+    return this.ordersService.createOrder(createOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  @Get('driver/getAllOrders')
+  async getAllOrders() {
+    return this.ordersService.getAllOrders();
   }
 
   @Get(':id')
