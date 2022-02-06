@@ -31,7 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   //First verifies access token and decodes payload as sends it back
 
   async validate(payload: { userId: number; roles: string }) {
-    console.log('Verifying token');
+    console.log('Token Verified----');
     return {
       userId: payload.userId,
       roles: payload.roles,

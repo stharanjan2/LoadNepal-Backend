@@ -1,11 +1,14 @@
 import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { User } from 'src/users/users.entity';
+import { Vehicle } from 'src/vehicle/vehicle.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -13,48 +16,52 @@ import {
 @Entity({ name: 'orders' })
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
-  order_id: Number;
+  _id: Number;
 
   @Column()
   @IsNotEmpty()
-  load_from: String;
+  loadFrom: String;
 
   @Column()
   @IsNotEmpty()
-  unload_to: String;
+  unloadTo: String;
 
   @Column()
   @IsNotEmpty()
-  date_of_delivery: String;
+  dateOfDelivery: String;
 
   @Column()
   @IsNotEmpty()
-  type_of_good: String;
+  typeOfGood: String;
 
   @Column()
   @IsNotEmpty()
-  weight_of_good: Number;
+  weightOfGood: Number;
 
   @Column()
   @IsNotEmpty()
-  no_of_truck: Number;
+  noOfTruck: Number;
 
   @Column()
   @IsNotEmpty()
-  truck_preference: String;
+  truckPreference: String;
 
   @IsNotEmpty()
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
 
-  @Column()
-  vehcileId: number;
+  @OneToOne(() => Vehicle)
+  @JoinColumn()
+  vehicle: Vehicle;
+
+  // @Column()
+  // vehcileId: number;
 
   @Column()
-  user_username: String;
+  customer_username: String;
 
   @Column()
-  user_phoneNumber: number;
+  customer_phoneNumber: number;
 
   @Column()
   distance: number;
@@ -89,7 +96,7 @@ export class Order extends BaseEntity {
   isPayementMade: boolean;
 
   @Column()
-  additionalDeescription: String;
+  additionalDescription: String;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -99,4 +106,10 @@ export class Order extends BaseEntity {
 
   @ManyToOne(() => User, (driver) => driver.orders)
   driver: User;
+
+  @Column()
+  driver_username: String;
+
+  @Column()
+  driver_phoneNumber: String;
 }

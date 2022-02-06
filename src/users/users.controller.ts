@@ -14,10 +14,8 @@ import {
 } from '@nestjs/common';
 import RoleGuard from './role.guard';
 import Role from './role.enum';
-
 import { UsersService } from './users.service';
 import { User } from './users.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from './user.decorators';
 @Controller('users')
@@ -34,12 +32,4 @@ export class UsersController {
   async cool(@UserDecorator() user) {
     return `Admin role ${user.userId} ${user.roles}`;
   }
-
-  // @Post('register')
-  // async create(@Body() createUserDto: CreateUserDto) {
-  //   return this.userService.create(createUserDto);
-  // }
-  // async post(@Body() user: CreateUserDto): Promise<UserRO> {
-  //   return this.userService.postAll(user);
-  // }
 }

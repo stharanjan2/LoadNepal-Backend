@@ -13,7 +13,9 @@ import {
 import * as bcrypt from 'bcrypt';
 import Role from './role.enum';
 import { Order } from 'src/orders/entities/order.entity';
-import { Cipher } from 'crypto';
+
+import { Cipher, Verify } from 'crypto';
+import { Vehicle } from 'src/vehicle/vehicle.entity';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -43,6 +45,9 @@ export class User extends BaseEntity {
   city: string;
 
   @Column()
+  pan: string;
+
+  @Column()
   district: string;
 
   @Column()
@@ -50,6 +55,9 @@ export class User extends BaseEntity {
 
   @Column({ default: '' })
   identification: string;
+
+  @Column({ default: true })
+  verified: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -66,6 +74,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.driver)
+  vehicles: Vehicle[];
 
   @BeforeInsert()
   async hashPasswprd() {

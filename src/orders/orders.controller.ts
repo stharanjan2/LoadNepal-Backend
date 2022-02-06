@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { UpdateOrderDto } from './dto/accept-order-dto';
 import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { UserDecorator } from 'src/users/user.decorators';
 
 @Controller('api/test')
 export class OrdersController {
@@ -22,18 +24,65 @@ export class OrdersController {
   @Post('user/postOrder')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
-  async createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.createOrder(createOrderDto);
+  async createOrder(
+    @Body() createOrderDto: CreateOrderDto,
+    @UserDecorator() _user,
+  ) {
+    return this.ordersService.postOrders(createOrderDto, _user);
   }
 
-  @Get('driver/getAllOrders')
-  async getAllOrders() {
-    return this.ordersService.getAllOrders();
+  @Get('driver/filter/orders')
+  @UseGuards(RoleGuard(Role.DRIVER))
+  @UseGuards(JwtAuthGuard)
+  async getAllOrders(@Query() filter: any) {
+    return this.ordersService.getAllOrders(filter);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  @Get('/user/viewCurrentOrder/:id')
+  @UseGuards(RoleGuard(Role.USER))
+  @UseGuards(JwtAuthGuard)
+  async userViewAllOrders(@UserDecorator() _user) {
+    return this.ordersService.userViewAllOrders(_user);
+  }
+
+  //TODO --duplicate with above route need to change later
+  @Get('user/allOrders/:id')
+  @UseGuards(RoleGuard(Role.USER))
+  @UseGuards(JwtAuthGuard)
+  async viewAllOrders(@UserDecorator() _user) {
+    return this.ordersService.userViewAllOrders(_user);
+  }
+  @Get('user/viewAcceptedOrderUser/:id')
+  @UseGuards(RoleGuard(Role.USER))
+  @UseGuards(JwtAuthGuard)
+  async viewAcceptedOrderUser(@UserDecorator() _user) {
+    return this.ordersService.viewAcceptedOrderUser(_user);
+  }
+
+  //TODO Need to stup lockiing feature
+  @Patch('driver/lockRequest/:orderId')
+  @UseGuards(RoleGuard(Role.DRIVER))
+  @UseGuards(JwtAuthGuard)
+  async setLock(@Param('orderId') _orderId, @UserDecorator() _user) {
+    return `Order Locked ${_orderId}`;
+  }
+
+  @Patch('driver/acceptRequest/:orderId')
+  @UseGuards(RoleGuard(Role.DRIVER))
+  @UseGuards(JwtAuthGuard)
+  async acceptOrder(
+    @Param('orderId') _orderId,
+    @Body() _vehicle,
+    @UserDecorator() _user,
+  ) {
+    this.ordersService.acceptOrder(_orderId, _vehicle, _user);
+  }
+
+  @Get('user/viewAcceptedOrderDriver/:id')
+  @UseGuards(RoleGuard(Role.DRIVER))
+  @UseGuards(JwtAuthGuard)
+  async viewAcceptedOrderDriver(@UserDecorator() _user) {
+    return this.ordersService.viewAcceptedOrderDriver(_user);
   }
 
   @Patch(':id')

@@ -18,15 +18,14 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
   async login(authLoginDto: AuthLoginDto) {
     const user = await this.validateUser(authLoginDto);
     const jwt_payload = {
-      userIId: user.id,
-      roless: user.roles,
+      userId: user.id,
+      roles: user.roles,
     };
     const token = this.jwtService.sign(jwt_payload);
 
@@ -35,17 +34,18 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles,
+        roles: ['Roles_DRIVER'],
         accessToken: token,
         identification: user.identification,
         phoneNumber: user.phoneNumber,
+        verified: user.verified,
       };
     } else {
       return {
         id: user.id,
         username: user.username,
         email: user.email,
-        roles: user.roles,
+        roles: ['Roles_USER'],
         phoneNumber: user.phoneNumber,
         accessToken: token,
       };
@@ -63,6 +63,7 @@ export class AuthService {
         HttpStatus.NOT_FOUND,
       );
     }
+    delete user.password;
     return user;
   }
 

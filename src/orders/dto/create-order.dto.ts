@@ -2,26 +2,32 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateOrderDto {
   @IsNotEmpty()
-  readonly load_from: string;
+  readonly loadFrom: string;
 
   @IsNotEmpty()
-  readonly unload_to: string;
+  readonly unloadTo: string;
 
   @IsNotEmpty()
-  readonly date_of_delivery: string;
+  readonly dateOfDelivery: string;
 
   @IsNotEmpty()
-  readonly type_of_good: string;
+  readonly typeOfGood: string;
 
   @IsNotEmpty()
-  readonly weight_of_good: Number;
+  readonly weightOfGood: Number;
 
   @IsNotEmpty()
-  readonly no_of_truck: Number;
+  noOfTruck: Number;
 
   @IsNotEmpty()
-  readonly truck_preference: String;
+  readonly truckPreference: String;
+
+  // @IsNotEmpty()
+  // readonly distance: number;
 
   @IsNotEmpty()
-  readonly clientId: number;
+  readonly price: number;
+
+  @IsNotEmpty()
+  readonly additionalDescription: String;
 }

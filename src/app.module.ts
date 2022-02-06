@@ -10,9 +10,10 @@ import { Connection } from 'typeorm';
 import { User } from './users/users.entity';
 import { Order } from './orders/entities/order.entity';
 import { CommonModule } from './common/common.module';
+import { VehicleModule } from './vehicle/vehicle.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, OrdersModule, CommonModule],
+  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, OrdersModule, CommonModule, VehicleModule],
   controllers: [AppController],
   providers: [AppService],
 })

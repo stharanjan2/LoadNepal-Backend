@@ -25,8 +25,10 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  @Post('login')
+  @Post('signin')
   async login(@Body() authLoginDto: AuthLoginDto) {
+    console.log('Signing in');
+
     return this.authService.login(authLoginDto);
   }
 
@@ -42,8 +44,11 @@ export class AuthController {
   }
 
   @UsePipes(new ValidationPipe())
-  @Post('signup')
+  @Post('customer/signup')
   async create(@Body() createUserDto: CreateUserDto) {
+    console.log('Signininup');
+    console.log('DTO', createUserDto);
+
     return this.authService.signup(createUserDto);
   }
 }

@@ -7,13 +7,10 @@ import { userProviders } from 'src/users/user.providers';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { UsersModule } from 'src/users/users.module';
+import { VehicleModule } from 'src/vehicle/vehicle.module';
 
 @Module({
-  imports: [
-    // DatabaseModule
-    TypeOrmModule.forFeature([Order]),
-    UsersModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Order]), UsersModule, VehicleModule],
 
   controllers: [OrdersController],
   providers: [
