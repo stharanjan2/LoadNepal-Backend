@@ -1,10 +1,12 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Headers,
   Post,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,10 +15,12 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { JwtAuthGuard } from './jwt.auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 import jwt_decode from 'jwt-decode';
 import { UsersService } from 'src/users/users.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('authentication')
 @Controller('api/auth')
 export class AuthController {
   constructor(
@@ -25,6 +29,7 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('signin')
   async login(@Body() authLoginDto: AuthLoginDto) {
     console.log('Signing in');
@@ -43,6 +48,7 @@ export class AuthController {
     return 'Successful person';
   }
 
+  @ApiProperty()
   @UsePipes(new ValidationPipe())
   @Post('customer/signup')
   async create(@Body() createUserDto: CreateUserDto) {

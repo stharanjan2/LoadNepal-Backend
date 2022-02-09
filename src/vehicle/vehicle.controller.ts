@@ -6,6 +6,8 @@ import { UserDecorator } from 'src/users/user.decorators';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { VehicleService } from './vehicle.service';
 
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
+@ApiTags('vehicle')
 @Controller('api/test/driver')
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}

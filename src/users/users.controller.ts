@@ -18,6 +18,9 @@ import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from './user.decorators';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
+
+@ApiTags('admin')
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
@@ -26,10 +29,10 @@ export class UsersController {
   async findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
-  @Post('user')
-  @UseGuards(RoleGuard(Role.DRIVER))
-  @UseGuards(JwtAuthGuard)
-  async cool(@UserDecorator() user) {
-    return `Admin role ${user.userId} ${user.roles}`;
-  }
+  // @Post('user')
+  // @UseGuards(RoleGuard(Role.DRIVER))
+  // @UseGuards(JwtAuthGuard)
+  // async cool(@UserDecorator() user) {
+  //   return `Admin role ${user.userId} ${user.roles}`;
+  // }
 }

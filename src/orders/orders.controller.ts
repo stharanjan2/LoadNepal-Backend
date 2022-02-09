@@ -16,7 +16,9 @@ import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from 'src/users/user.decorators';
+import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
 
+@ApiTags('orders')
 @Controller('api/test')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -78,6 +80,7 @@ export class OrdersController {
     this.ordersService.acceptOrder(_orderId, _vehicle, _user);
   }
 
+  @ApiResponse({ status: 403 })
   @Get('user/viewAcceptedOrderDriver/:id')
   @UseGuards(RoleGuard(Role.DRIVER))
   @UseGuards(JwtAuthGuard)
