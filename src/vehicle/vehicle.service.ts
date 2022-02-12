@@ -58,7 +58,7 @@ export class VehicleService {
     return vehicle;
   }
   async findVehicle(_vehicleId): Promise<Vehicle> {
-    const vehicle = await this.vehicleRepository.findOne({ id: _vehicleId });
+    const vehicle = await this.vehicleRepository.findOne({ _id: _vehicleId });
     if (!vehicle) {
       throw new HttpException(
         'No vehicle registered under given idr',

@@ -42,9 +42,15 @@ export class Order extends BaseEntity {
   @IsNotEmpty()
   noOfTruck: Number;
 
+  @Column({ nullable: true })
+  price: number;
+
   @Column()
   @IsNotEmpty()
   truckPreference: String;
+
+  @Column({ nullable: true })
+  distance: number;
 
   @IsNotEmpty()
   @ManyToOne(() => User, (user) => user.orders)
@@ -62,12 +68,6 @@ export class Order extends BaseEntity {
 
   @Column()
   customer_phoneNumber: number;
-
-  @Column()
-  distance: number;
-
-  @Column()
-  price: number;
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
@@ -95,7 +95,7 @@ export class Order extends BaseEntity {
   @IsBoolean()
   isPayementMade: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   additionalDescription: String;
 
   @CreateDateColumn()
@@ -107,9 +107,9 @@ export class Order extends BaseEntity {
   @ManyToOne(() => User, (driver) => driver.orders)
   driver: User;
 
-  @Column()
+  @Column({ nullable: true })
   driver_username: String;
 
-  @Column()
+  @Column({ nullable: true })
   driver_phoneNumber: String;
 }

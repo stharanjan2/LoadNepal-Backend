@@ -20,11 +20,10 @@ export class SignupMiddleware implements NestMiddleware {
     //check for duplicate username,email,phoneNumber
     console.log('Running middleware');
 
-    const { username, email, phoneNumber } = req.body;
+    const { username, email, phoneNumber, roles } = req.body;
     console.log('BODY', req.body);
     //roles is in array so we need first item
-    //SETTING ROLES TO ['user']
-    const _roles = [Role.USER];
+    const _roles = roles[0];
     req.body.roles = _roles;
 
     const user = await this.userRepository.findOne({
@@ -47,21 +46,20 @@ export class SignupMiddleware implements NestMiddleware {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     //Check for valid role
-    //   if (
-    //     !(
-    //       _roles === Role.ADMIN ||
-    //       _roles === Role.DRIVER ||
-    //       _roles === Role.OWNER ||
-    //       _roles === Role.USER
-    //     )
-    //   ) {
-    //     throw new HttpException(
-    //       `Failed! Role ${_roles} doesnt exist`,
-    //       HttpStatus.BAD_REQUEST,
-    //     );
-    //   }
+    if (
+      !(
+        _roles === Role.ADMIN ||
+        _roles === Role.DRIVER ||
+        _roles === Role.OWNER ||
+        _roles === Role.USER
+      )
+    ) {
+      throw new HttpException(
+        `Failed! Role ${_roles} doesnt exist`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     next();
   }

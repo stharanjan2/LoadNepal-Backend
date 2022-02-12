@@ -10,7 +10,7 @@ import { UsersService } from 'src/users/users.service';
 import { timeStamp } from 'console';
 import { Vehicle } from 'src/vehicle/vehicle.entity';
 import { VehicleService } from 'src/vehicle/vehicle.service';
-
+import Distance from './entities/utils/distance';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -22,42 +22,36 @@ export class OrdersService {
     private readonly usersService: UsersService,
   ) {}
 
-  async postOrders(createOrderDto: CreateOrderDto, _user) {
-    console.log('Posting Orders');
-    console.log('ORDER', createOrderDto);
+  async postOrders(createOrderDto: CreateOrderDto, _user): Promise<Order> {
+    try {
+      console.log('Posting Orders');
+      console.log('ORDER', createOrderDto);
 
-    const user: User = await this.verifyOrder(createOrderDto, _user); //Verify whetehr order meets certain criterai and return back user
-    await this.createOrders(createOrderDto, user); //Finally call create orders to crete orders
+      const user: User = await this.verifyOrder(createOrderDto, _user); //Verify whetehr order meets certain criterai and return back user
+      // await this.createOrders(createOrderDto, user); //Finally call create orders to crete orders
+      const postedOrder = await this.createOrder(createOrderDto, user);
+      return postedOrder;
+    } catch (error) {
+      console.log('ERROR', error);
+
+      throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
+    }
   }
-  // const _userId = _user.userId;
-  // const user = await this.usersService.findUser(_userId);
-  // if (!user) {
-  //   throw new HttpException(
-  //     `${Role.USER} No User Found With given Id  `,
-  //     HttpStatus.NOT_FOUND,
-  //   );
-  // }
-  // const order = this.orderRepository.create(createOrderDto);
-  // order.user = user;
-  // console.log('Order', createOrderDto);
 
-  // try {
-  //   await order.save();
-  //   delete order.user.password;
-  //   return order;
-  // } catch (error) {
-  //   throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
-  // }
-
-  async createOrder(createOrderDto: CreateOrderDto, user) {
+  async createOrder(createOrderDto: CreateOrderDto, user: User) {
     console.log('Creating order');
     const order = this.orderRepository.create(createOrderDto);
+    const _distance: number = await this.calculateDistance(createOrderDto);
+    order.distance = _distance;
     order.user = user;
-    console.log('Order Created', createOrderDto);
+    order.customer_username = user.username;
+    order.customer_phoneNumber = user.phoneNumber;
 
     try {
       await order.save();
-      return;
+      console.log('Order Created', createOrderDto);
+
+      return order;
     } catch (error) {
       console.log('ERROR IN ORDER', error);
 
@@ -76,6 +70,7 @@ export class OrdersService {
     }
   }
 
+  //Verifying if load is posted by existing user or not
   async verifyOrder(createOrderDto: CreateOrderDto, _user): Promise<User> {
     console.log('Verifying');
 
@@ -233,6 +228,29 @@ export class OrdersService {
       );
     }
     return order;
+  }
+
+  async calculateDistance(createOrderDto: CreateOrderDto): Promise<number> {
+    try {
+      const { loadFrom, unloadTo } = createOrderDto;
+      if (Distance[loadFrom][unloadTo]) {
+        console.log('ORIGIN DESTINATION IS ', Distance[loadFrom][unloadTo]);
+        const distance = Distance[loadFrom][unloadTo];
+        return distance;
+      }
+      if (Distance[unloadTo][loadFrom]) {
+        console.log('destination origin is', Distance[unloadTo][loadFrom]);
+        const distance = Distance[unloadTo][loadFrom];
+        return distance;
+      } else {
+        console.log('NO RESULT');
+        const distance = 0;
+        return distance;
+      }
+    } catch (error) {
+      const distance = 0;
+      return distance;
+    }
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

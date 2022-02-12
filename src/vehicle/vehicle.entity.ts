@@ -12,7 +12,7 @@ import {
 @Entity({ name: 'vehicles' })
 export class Vehicle extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  _id: number;
 
   @Column()
   lisenceNo: string;

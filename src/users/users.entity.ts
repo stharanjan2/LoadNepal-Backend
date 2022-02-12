@@ -19,7 +19,7 @@ import { Vehicle } from 'src/vehicle/vehicle.entity';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  _id: number;
 
   @Column({ unique: true, length: 25 })
   @Length(4, 20)
@@ -41,16 +41,19 @@ export class User extends BaseEntity {
   // @Length(10, 10)
   phoneNumber: number;
 
-  @Column()
+  @Column({ default: '' })
+  contact_person: string;
+
+  @Column({ default: '' })
   city: string;
 
-  @Column()
+  @Column({ default: '' })
   pan: string;
 
-  @Column()
+  @Column({ default: '' })
   district: string;
 
-  @Column()
+  @Column({ default: '' })
   state: string;
 
   @Column({ default: '' })

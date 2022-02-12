@@ -11,9 +11,18 @@ import { User } from './users/users.entity';
 import { Order } from './orders/entities/order.entity';
 import { CommonModule } from './common/common.module';
 import { VehicleModule } from './vehicle/vehicle.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, AuthModule, OrdersModule, CommonModule, VehicleModule],
+  imports: [
+    TypeOrmModule.forRoot(),
+    UsersModule,
+    AuthModule,
+    OrdersModule,
+    CommonModule,
+    VehicleModule,
+    MailModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

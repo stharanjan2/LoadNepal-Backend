@@ -25,6 +25,8 @@ const RoleGuard = (role: Role): Type<CanActivate> => {
       const request = context.switchToHttp().getRequest<any>();
       const user = request.user;
       console.log('Role check complete', user.roles);
+      console.log('ROLE----', role);
+
       console.log('ROOOR', user?.roles.includes(role));
 
       return user?.roles.includes(role);

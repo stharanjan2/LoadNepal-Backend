@@ -23,13 +23,17 @@ import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  //FIXME ADDITIONAL DESRIPRION NOT WORKING DONT KNOW WHY NEED TO BE FIXED
   @Post('user/postOrder')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
   async createOrder(
     @Body() createOrderDto: CreateOrderDto,
+    @Body() check,
     @UserDecorator() _user,
   ) {
+    console.log('CHECKING BODY', check);
+
     return this.ordersService.postOrders(createOrderDto, _user);
   }
 
