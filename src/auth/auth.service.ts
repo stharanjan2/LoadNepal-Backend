@@ -92,11 +92,8 @@ export class AuthService {
   }
 
   async sendOtp(otpDto: SendOtpDto) {
-    console.log('SEND OTP');
-    // const temp_otp = 123456;
     const { email } = otpDto;
     console.log('RECEIVED MAIL', email);
-
     try {
       const _otpEntity = await this.otpService.send(email);
       return {
@@ -113,7 +110,6 @@ export class AuthService {
   }
 
   async verifyOtp(otpDto) {
-    // const temp_otp = 123456;
     const { email, otp } = otpDto;
     console.log('OTP FROM FRONTEND', otp, email);
     try {
@@ -121,10 +117,14 @@ export class AuthService {
       if (_otpRecord) {
         return 'Otp Successfully Verified ';
       } else {
-        throw new HttpException(
+        return  new HttpException(
           "Sorry Couldn't vaerify OTP",
           HttpStatus.NOT_FOUND,
         );
+        // throw new HttpException(
+        //   "Sorry Couldn't vaerify OTP",
+        //   HttpStatus.NOT_FOUND,
+        // );
       }
     } catch (error) {
       throw new HttpException(
