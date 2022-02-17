@@ -32,6 +32,8 @@ export class OtpService {
     });
 
     await this.mailService.sendOtpMail(_emailAddress, _OTP);
+    console.log('OTP SENT');
+
     await newOtp.save();
 
     return newOtp;
