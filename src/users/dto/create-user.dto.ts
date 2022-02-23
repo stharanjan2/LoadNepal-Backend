@@ -17,8 +17,25 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsNotEmpty()
+  readonly city: string;
+
+  @IsNotEmpty()
+  readonly district: string;
+
+  @IsNotEmpty()
+  readonly state: string;
+
+  @IsNotEmpty()
   @IsNumber()
   readonly phoneNumber: number;
+
+  @IsNotEmpty()
+  readonly pan: string;
+
+  readonly identifiaction: string;
+
+  @IsNotEmpty()
+  readonly contact_person: string;
 
   @IsNotEmpty()
   readonly roles: Role;

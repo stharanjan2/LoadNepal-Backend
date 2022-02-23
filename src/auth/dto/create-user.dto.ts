@@ -20,14 +20,16 @@ export class CreateUserDto {
   // @IsNumber()
   readonly phoneNumber: number;
 
+  @IsNotEmpty()
   readonly contact_person: string;
-
+  @IsNotEmpty()
   readonly city: string;
-
+  @IsNotEmpty()
   readonly district: string;
-
+  @IsNotEmpty()
   readonly state: string;
   readonly identification: string;
+  @IsNotEmpty()
   readonly pan: string;
   // @IsNotEmpty()
   // roles: Role;
