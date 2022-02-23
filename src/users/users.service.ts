@@ -53,4 +53,20 @@ export class UsersService {
     }
     return user;
   }
+  //TODO need to modify this
+  async findUserByConditionAndVerify(
+    _query: object,
+  ): Promise<User | undefined> {
+    const user = await this.userRepository.findOne(_query);
+    if (!user) {
+      throw new HttpException(
+        'No User Found With given Id',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    user.verified = true;
+    await user.save();
+    delete user.password;
+    return user;
+  }
 }

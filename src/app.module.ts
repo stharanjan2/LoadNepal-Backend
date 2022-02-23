@@ -12,11 +12,13 @@ import { Order } from './orders/entities/order.entity';
 import { CommonModule } from './common/common.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { MailModule } from './mail/mail.module';
+import { AdminModule } from './users/admin/admin.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     UsersModule,
+    AdminModule,
     AuthModule,
     OrdersModule,
     CommonModule,
