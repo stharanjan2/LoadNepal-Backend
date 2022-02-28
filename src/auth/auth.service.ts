@@ -63,6 +63,7 @@ export class AuthService {
         roles: ['Roles_USER'],
         phoneNumber: user.phoneNumber,
         accessToken: token,
+        verified: user.verified,
       };
     }
   }
@@ -117,7 +118,7 @@ export class AuthService {
       if (_otpRecord) {
         return 'Otp Successfully Verified ';
       } else {
-        return  new HttpException(
+        return new HttpException(
           "Sorry Couldn't vaerify OTP",
           HttpStatus.NOT_FOUND,
         );

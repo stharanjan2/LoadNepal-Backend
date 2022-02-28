@@ -13,7 +13,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import Role from './role.enum';
 import { Order } from 'src/orders/entities/order.entity';
-
+import { Notification } from 'src/notification/entities/notification.entity';
 import { Cipher, Verify } from 'crypto';
 import { Vehicle } from 'src/vehicle/vehicle.entity';
 @Entity({ name: 'users' })
@@ -80,6 +80,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.driver)
   vehicles: Vehicle[];
+
+  @OneToMany(() => Notification, (notification) => notification.receiver)
+  notification: Notification[];
 
   @BeforeInsert()
   async hashPasswprd() {

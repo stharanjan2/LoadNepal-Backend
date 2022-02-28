@@ -59,6 +59,6 @@ export class Vehicle extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (driver) => driver.orders)
+  @ManyToOne(() => User, (driver) => driver.vehicles)
   driver: User;
 }

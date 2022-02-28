@@ -38,7 +38,7 @@ export class OrdersController {
   }
 
   @Get('driver/filter/orders')
-  @UseGuards(RoleGuard(Role.DRIVER))
+  // @UseGuards(RoleGuard(Role.DRIVER))
   @UseGuards(JwtAuthGuard)
   async getAllOrders(@Query() filter: any) {
     return this.ordersService.getAllOrders(filter);

@@ -13,6 +13,7 @@ import { CommonModule } from './common/common.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { MailModule } from './mail/mail.module';
 import { AdminModule } from './users/admin/admin.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AdminModule } from './users/admin/admin.module';
     CommonModule,
     VehicleModule,
     MailModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
