@@ -59,7 +59,7 @@ export class User extends BaseEntity {
   @Column({ default: '' })
   identification: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   verified: boolean;
 
   @CreateDateColumn()
