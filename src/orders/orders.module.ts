@@ -13,10 +13,7 @@ import { VehicleModule } from 'src/vehicle/vehicle.module';
   imports: [TypeOrmModule.forFeature([Order]), UsersModule, VehicleModule],
 
   controllers: [OrdersController],
-  providers: [
-    // ...orderProviders, ...userProviders,
-
-    OrdersService,
-  ],
+  providers: [OrdersService],
+  exports: [OrdersService],
 })
 export class OrdersModule {}

@@ -43,6 +43,10 @@ export class UsersService {
     return this.userRepository.findOne({ phoneNumber: phoneNumber });
   }
 
+  async findUsersByQuery(condition: object): Promise<User[]> {
+    return await this.userRepository.find(condition);
+  }
+
   async findUser(_userId: number): Promise<User | undefined> {
     const user = this.userRepository.findOne({ _id: _userId });
     if (!user) {

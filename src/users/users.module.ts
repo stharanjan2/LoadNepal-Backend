@@ -6,7 +6,7 @@ import { UsersController } from './users.controller';
 import { User } from './users.entity';
 import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminModule } from './admin/admin.module';
+// import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],

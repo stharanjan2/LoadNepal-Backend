@@ -11,6 +11,7 @@ import { timeStamp } from 'console';
 import { Vehicle } from 'src/vehicle/vehicle.entity';
 import { VehicleService } from 'src/vehicle/vehicle.service';
 import Distance from './entities/utils/distance';
+import { EditOrderDto } from './dto/edit-order-dto';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -250,6 +251,30 @@ export class OrdersService {
     } catch (error) {
       const distance = 0;
       return distance;
+    }
+  }
+  //TODO change this to make more abstract and use repository pattern
+  async adminViewAllOrders(): Promise<Order[]> {
+    try {
+      return await Order.find({});
+    } catch (error) {
+      throw new HttpException(
+        `Error on fetching all orders ${error}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async editOrder(orderId, editOrderDto: EditOrderDto): Promise<Order> {
+    try {
+      let toEditOrder = await this.orderRepository.findOne(orderId);
+      let updatedOrder = Object.assign(toEditOrder, editOrderDto);
+      return await this.orderRepository.save(updatedOrder);
+    } catch (error) {
+      throw new HttpException(
+        `Problem in editing request please try with valid values   ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
