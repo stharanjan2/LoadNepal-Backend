@@ -102,4 +102,12 @@ export class AuthController {
 
     return this.authService.signup(createUserDto);
   }
+  @UsePipes(new ValidationPipe())
+  @Post('admin/signup')
+  async createAdmin(@Body() createUserDto: CreateUserDto) {
+    console.log('Signininup');
+    console.log('DTO', createUserDto);
+
+    return this.authService.signup(createUserDto);
+  }
 }
