@@ -103,6 +103,8 @@ export class AuthService {
         email: _otpEntity.email,
       };
     } catch (error) {
+      console.log('Error while sending otp', error);
+
       throw new HttpException(
         `Unable to send otp mail  : ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,

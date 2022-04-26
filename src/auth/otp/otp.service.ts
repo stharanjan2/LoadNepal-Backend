@@ -21,6 +21,8 @@ export class OtpService {
     console.log('OTP SENDING---- ');
 
     const oldOtp = await this.otpRepository.findOne({ email: _emailAddress });
+    console.log(oldOtp);
+
     if (oldOtp) {
       await this.otpRepository.remove(oldOtp);
     }

@@ -14,6 +14,7 @@ import { VehicleModule } from './vehicle/vehicle.module';
 import { MailModule } from './mail/mail.module';
 import { AdminModule } from './users/admin/admin.module';
 import { NotificationModule } from './notification/notification.module';
+import { TripsModule } from './orders/trips/trips.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { NotificationModule } from './notification/notification.module';
     VehicleModule,
     MailModule,
     NotificationModule,
+    TripsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

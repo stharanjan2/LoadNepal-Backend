@@ -16,6 +16,7 @@ import { Order } from 'src/orders/entities/order.entity';
 import { Notification } from 'src/notification/entities/notification.entity';
 import { Cipher, Verify } from 'crypto';
 import { Vehicle } from 'src/vehicle/vehicle.entity';
+import { Trip } from 'src/orders/trips/entities/trip.entity';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -77,6 +78,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
+
+  @OneToMany(() => Trip, (trip) => trip.user)
+  trips: Trip[];
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.driver)
   vehicles: Vehicle[];

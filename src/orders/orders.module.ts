@@ -11,7 +11,12 @@ import { VehicleModule } from 'src/vehicle/vehicle.module';
 import { TripsModule } from './trips/trips.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order]), UsersModule, VehicleModule, TripsModule],
+  imports: [
+    TypeOrmModule.forFeature([Order]),
+    UsersModule,
+    VehicleModule,
+    // TripsModule,
+  ],
 
   controllers: [OrdersController],
   providers: [OrdersService],

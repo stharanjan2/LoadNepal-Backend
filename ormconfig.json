@@ -6,8 +6,8 @@
   "ssl": {
     "rejectUnauthorized": false
   },
-  "synchronize": false,
+  "synchronize": true,
   "migrations": ["dist/migrations/*{.ts,.js}"],
   "migrationsTableName": "migrations_typeorm",
-  "migrationsRun": true
+  "migrationsRun": false
 }

@@ -9,5 +9,5 @@ export class CreateNotificationDto {
   @IsNotEmpty()
   readonly type: String;
   @IsNotEmpty()
-  readonly receiverId: number;
+  readonly receiverId: any;
 }

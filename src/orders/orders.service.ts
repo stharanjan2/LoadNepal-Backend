@@ -220,7 +220,8 @@ export class OrdersService {
 
   async findOrder(_orderId): Promise<Order> {
     const order = await this.orderRepository.findOne({
-      _id: _orderId,
+      where: { _id: _orderId },
+      loadRelationIds: true,
     });
     if (!order) {
       throw new HttpException(

@@ -8,44 +8,46 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Trip } from '../trips/entities/trip.entity';
 
 @Entity({ name: 'orders' })
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   _id: Number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   loadFrom: String;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   unloadTo: String;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   dateOfDelivery: String;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   typeOfGood: String;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   weightOfGood: Number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   noOfTruck: Number;
 
   @Column({ nullable: true })
   price: number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   truckPreference: String;
 
@@ -63,10 +65,10 @@ export class Order extends BaseEntity {
   // @Column()
   // vehcileId: number;
 
-  @Column()
+  @Column({ nullable: true })
   customer_username: String;
 
-  @Column()
+  @Column({ nullable: true })
   customer_phoneNumber: number;
 
   @Column({ type: 'boolean', default: false })
@@ -112,4 +114,10 @@ export class Order extends BaseEntity {
 
   @Column({ nullable: true })
   driver_phoneNumber: String;
+
+  @Column({ default: 0, nullable: true })
+  noOfTrips: number;
+
+  @OneToMany(() => Trip, (trip) => trip.order)
+  trips: Trip[];
 }
