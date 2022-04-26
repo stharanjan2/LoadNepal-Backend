@@ -62,7 +62,8 @@ export class TripsService {
         totalPrice += trips[i].total;
         trips[i].order = _order._id;
         trips[i].user = userId;
-        await this.createTrip(trips[i], _order);
+        const returnedTrip = await this.createTrip(trips[i], _order);
+        _order.addTrips(returnedTrip);
       }
 
       console.log('All trips created');
@@ -94,12 +95,14 @@ export class TripsService {
     }
   }
 
-  async createTrip(tripData, _order: Order) {
+  async createTrip(tripData: Trip, _order: Order): Promise<Trip> {
     try {
       console.log('Creating TRIP', tripData);
       const _trip = this.tripRepository.create(tripData);
-      await this.tripRepository.save(_trip);
+      const createdTrip = await this.tripRepository.save(_trip);
       console.log('TRIP CREATED', _trip);
+
+      return createdTrip;
     } catch (error) {
       console.log('Error while creating trip', error);
       throw new HttpException(
@@ -152,11 +155,15 @@ export class TripsService {
     }
   }
 
-  async viewAssignedTrips(orderId): Promise<Trip[]> {
+  async viewAssignedTrips(body): Promise<Trip[]> {
     try {
-      console.log('oRDER ID', orderId);
+      console.log('oRDER ID', body.orderId);
+      const orderId = body.orderId;
 
-      const tripsRecord = await this.tripRepository.find({});
+      const tripsRecord = await this.tripRepository.find({
+        order: orderId,
+        // where: { orderid: body.orderId },
+      });
       console.log('Assigned trips are', tripsRecord);
 
       return tripsRecord;

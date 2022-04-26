@@ -118,6 +118,13 @@ export class Order extends BaseEntity {
   @Column({ default: 0, nullable: true })
   noOfTrips: number;
 
-  @OneToMany(() => Trip, (trip) => trip.order)
+  @OneToMany(() => Trip, (trip) => trip.order, { cascade: true })
   trips: Trip[];
+
+  addTrips(trip: Trip) {
+    if (this.trips == null) {
+      this.trips = Array<Trip>();
+    }
+    this.trips.push(trip);
+  }
 }

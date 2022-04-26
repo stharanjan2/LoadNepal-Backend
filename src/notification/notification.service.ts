@@ -20,7 +20,9 @@ export class NotificationService {
   ): Promise<Object> {
     try {
       const { title, message, type, receiverId } = createNotificationDto;
-      const senderId = _user.userId;
+      const senderId = _user;
+      console.log('NOTIFICTTION SENDER ID', senderId);
+
       const sender = await this.userService.findUser(senderId);
       const receiver = await this.userService.findUser(receiverId);
       const notification: Notification = this.notificationRepository.create(
