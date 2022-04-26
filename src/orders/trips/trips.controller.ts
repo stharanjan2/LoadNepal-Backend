@@ -65,9 +65,10 @@ export class TripsController {
     return this.tripsService.editTrips(editTripDto);
   }
 
+  //TODO make better specification in paramater
   @Post('viewAssignedTrips')
   @UseGuards(JwtAuthGuard)
-  async viewAssignedTrips(@Body() orderId) {
-    this.tripsService.viewAssignedTrips(orderId);
+  async viewAssignedTrips(@Body() body) {
+    return this.tripsService.viewAssignedTrips(body);
   }
 }
