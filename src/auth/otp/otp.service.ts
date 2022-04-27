@@ -47,6 +47,9 @@ export class OtpService {
       email: _emailAddress,
       otp: _otp,
     });
+    if (!_otpRecord) {
+      throw new HttpException(`Otp doesnt match `, HttpStatus.NOT_FOUND);
+    }
     return _otpRecord;
   }
 }

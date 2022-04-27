@@ -26,6 +26,9 @@ export class CreateUserDto {
   readonly city: string;
   @IsNotEmpty()
   readonly district: string;
+
+  @IsNotEmpty()
+  readonly street: string;
   @IsNotEmpty()
   readonly state: string;
   readonly identification: string;

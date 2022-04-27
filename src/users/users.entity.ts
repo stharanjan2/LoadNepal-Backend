@@ -58,6 +58,9 @@ export class User extends BaseEntity {
   state: string;
 
   @Column({ default: '' })
+  street: string;
+
+  @Column({ default: '' })
   identification: string;
 
   @Column({ default: false })

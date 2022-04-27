@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Headers,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -24,6 +25,9 @@ import { SendOtpDto } from './otp/send.otp.dto';
 import { VerifyOtpDto } from './otp/verify.otp.dto';
 import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
+import { EditOrderDto } from 'src/orders/dto/edit-order-dto';
+import { UserDecorator } from 'src/users/user.decorators';
+import { EditUserDto } from 'src/users/dto/edit-user.dto';
 @ApiTags('authentication')
 @Controller('api/auth')
 export class AuthController {
@@ -109,5 +113,13 @@ export class AuthController {
     console.log('DTO', createUserDto);
 
     return this.authService.signup(createUserDto);
+  }
+
+  @Patch('editProfile')
+  @UseGuards(JwtAuthGuard)
+  async editProfile(@Body() editUserDto: EditUserDto, @UserDecorator() _user) {
+    console.log('Profile', editUserDto);
+
+    return this.authService.editProfile(editUserDto, _user);
   }
 }

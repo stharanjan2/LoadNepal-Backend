@@ -17,6 +17,7 @@ import { Otp } from './otp/otp.entity';
 import { VerifyOtpDto } from './otp/verify.otp.dto';
 import { MailService } from 'src/mail/mail.service';
 import { OtpService } from './otp/otp.service';
+import { EditUserDto } from 'src/users/dto/edit-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
     private readonly otpService: OtpService,
+    public readonly userService: UsersService,
   ) {}
 
   async login(authLoginDto: AuthLoginDto) {
@@ -64,6 +66,12 @@ export class AuthService {
         phoneNumber: user.phoneNumber,
         accessToken: token,
         verified: user.verified,
+        city: user.city,
+        district: user.district,
+        street: user.street,
+        state: user.state,
+        pan: user.pan,
+        contact_person: user.contact_person,
       };
     }
   }
@@ -132,6 +140,30 @@ export class AuthService {
     } catch (error) {
       throw new HttpException(
         ` ERROR WHILE VERIFYING OTP   ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async editProfile(editUserDto: EditUserDto, _user): Promise<Object> {
+    try {
+      console.log('Edit paramaters', editUserDto);
+
+      const userId = _user.userId;
+      let toUpdateUser = await this.userService.findUser(userId);
+      if (!toUpdateUser) {
+        throw new HttpException(` No User Found`, HttpStatus.NOT_FOUND);
+      }
+      delete toUpdateUser.password;
+      delete toUpdateUser.email;
+      let updatedUser = Object.assign(toUpdateUser, editUserDto);
+      console.log('Updated profile is', updatedUser);
+      await toUpdateUser.save();
+      return { message: 'successfully updated user profile' };
+    } catch (error) {
+      console.log('Error while editing user profile', error);
+      throw new HttpException(
+        ` ERROR WHILE EDITING PROFILE   ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
