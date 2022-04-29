@@ -183,8 +183,9 @@ export class OrdersService {
     const vehicle: Vehicle = await this.vehicleService.findVehicle(_vehicleId);
 
     order.isAccepted = true;
-    order.vehicle = vehicle;
-    order.driver = user;
+    //---No need for now----
+    // order.vehicle = vehicle;
+    // order.driver = user;
 
     try {
       await order.save();
@@ -197,26 +198,28 @@ export class OrdersService {
     }
   }
 
-  async viewAcceptedOrderDriver(_user): Promise<Order[]> {
-    console.log('View Accepted Order');
-    const _userId = _user.userId;
-    try {
-      const driver: User = await this.usersService.findUser(_userId);
+  //--No need for now-----
 
-      const orders = await this.orderRepository.find({
-        driver: driver,
-        isDestinationReached: false,
-        isAccepted: true,
-      });
+  // async viewAcceptedOrderDriver(_user): Promise<Order[]> {
+  //   console.log('View Accepted Order');
+  //   const _userId = _user.userId;
+  //   try {
+  //     const driver: User = await this.usersService.findUser(_userId);
 
-      console.log('DRIVER VIEWS ACCEPTED ORDER', orders);
-      if (orders) {
-        return orders;
-      }
-    } catch (error) {
-      throw new HttpException(` No order found  `, HttpStatus.NOT_FOUND);
-    }
-  }
+  //     const orders = await this.orderRepository.find({
+  //       driver: driver,
+  //       isDestinationReached: false,
+  //       isAccepted: true,
+  //     });
+
+  //     console.log('DRIVER VIEWS ACCEPTED ORDER', orders);
+  //     if (orders) {
+  //       return orders;
+  //     }
+  //   } catch (error) {
+  //     throw new HttpException(` No order found  `, HttpStatus.NOT_FOUND);
+  //   }
+  // }
 
   async findOrder(_orderId): Promise<Order> {
     const order = await this.orderRepository.findOne({

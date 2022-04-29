@@ -31,7 +31,7 @@ export class CreateUserDto {
   readonly street: string;
   @IsNotEmpty()
   readonly state: string;
-  readonly identification: string;
+  // readonly identification: string;
   @IsNotEmpty()
   readonly pan: string;
   // @IsNotEmpty()

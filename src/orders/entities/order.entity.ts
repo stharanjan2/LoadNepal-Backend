@@ -44,12 +44,19 @@ export class Order extends BaseEntity {
   @IsNotEmpty()
   noOfTruck: Number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   price: number;
 
-  @Column({ nullable: true })
+  @Column({ default: 0 })
+  customerPrice: String;
+
+  @Column({ nullable: true, default: '' })
   @IsNotEmpty()
   truckPreference: String;
+
+  @Column({ nullable: true, default: '' })
+  @IsNotEmpty()
+  truckDetail: String;
 
   @Column({ nullable: true })
   distance: number;
@@ -58,9 +65,9 @@ export class Order extends BaseEntity {
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
 
-  @OneToOne(() => Vehicle)
-  @JoinColumn()
-  vehicle: Vehicle;
+  // @OneToOne(() => Vehicle)
+  // @JoinColumn()
+  // vehicle: Vehicle;
 
   // @Column()
   // vehcileId: number;
@@ -97,7 +104,11 @@ export class Order extends BaseEntity {
   @IsBoolean()
   isPayementMade: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'boolean', default: false })
+  @IsBoolean()
+  needHelper: boolean;
+
+  @Column({ nullable: true, default: '' })
   additionalDescription: String;
 
   @CreateDateColumn()
@@ -106,14 +117,16 @@ export class Order extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (driver) => driver.orders)
-  driver: User;
+  //---Remover driver id,vehicle id ,driver_username,driver_phoneNumber
 
-  @Column({ nullable: true })
-  driver_username: String;
+  // @ManyToOne(() => User, (driver) => driver.orders)
+  // driver: User;
 
-  @Column({ nullable: true })
-  driver_phoneNumber: String;
+  // @Column({ nullable: true })
+  // driver_username: String;
+
+  // @Column({ nullable: true })
+  // driver_phoneNumber: String;
 
   @Column({ default: 0, nullable: true })
   noOfTrips: number;

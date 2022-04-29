@@ -44,7 +44,7 @@ export class AuthService {
         email: user.email,
         roles: ['Roles_DRIVER'],
         accessToken: token,
-        identification: user.identification,
+        // identification: user.identification,
         phoneNumber: user.phoneNumber,
         verified: user.verified,
       };

@@ -33,6 +33,7 @@ export class OrdersController {
     @UserDecorator() _user,
   ) {
     console.log('CHECKING BODY', check);
+    console.log('Check Order DTO', createOrderDto);
 
     return this.ordersService.postOrders(createOrderDto, _user);
   }
@@ -84,13 +85,13 @@ export class OrdersController {
     this.ordersService.acceptOrder(_orderId, _vehicle, _user);
   }
 
-  @ApiResponse({ status: 403 })
-  @Get('user/viewAcceptedOrderDriver/:id')
-  @UseGuards(RoleGuard(Role.DRIVER))
-  @UseGuards(JwtAuthGuard)
-  async viewAcceptedOrderDriver(@UserDecorator() _user) {
-    return this.ordersService.viewAcceptedOrderDriver(_user);
-  }
+  // @ApiResponse({ status: 403 })
+  // @Get('user/viewAcceptedOrderDriver/:id')
+  // @UseGuards(RoleGuard(Role.DRIVER))
+  // @UseGuards(JwtAuthGuard)
+  // async viewAcceptedOrderDriver(@UserDecorator() _user) {
+  //   return this.ordersService.viewAcceptedOrderDriver(_user);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {

@@ -19,13 +19,23 @@ export class CreateOrderDto {
   @IsNotEmpty()
   noOfTruck: Number;
 
+  // @IsNotEmpty()
   readonly price: number;
+
+  @IsNotEmpty()
+  readonly customerPrice: String;
 
   @IsNotEmpty()
   readonly truckPreference: String;
 
+  @IsNotEmpty()
+  readonly truckDetail: String;
+
+  @IsNotEmpty()
+  readonly needHelper: boolean;
+
   // @IsNotEmpty()
   distance: number;
-
-  readonly additionalDescription: any;
+  @IsNotEmpty()
+  readonly additionalDescription: String;
 }
