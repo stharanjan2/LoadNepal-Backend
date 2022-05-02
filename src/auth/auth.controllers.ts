@@ -28,6 +28,7 @@ import Role from 'src/users/role.enum';
 import { EditOrderDto } from 'src/orders/dto/edit-order-dto';
 import { UserDecorator } from 'src/users/user.decorators';
 import { EditUserDto } from 'src/users/dto/edit-user.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 @ApiTags('authentication')
 @Controller('api/auth')
 export class AuthController {
@@ -106,14 +107,14 @@ export class AuthController {
 
     return this.authService.signup(createUserDto);
   }
-  @UsePipes(new ValidationPipe())
-  @Post('admin/signup')
-  async createAdmin(@Body() createUserDto: CreateUserDto) {
-    console.log('Signininup');
-    console.log('DTO', createUserDto);
 
-    return this.authService.signup(createUserDto);
-  }
+  // @UsePipes(new ValidationPipe())
+  // @Post('admin/signup')
+  // async createAdmin(@Body() createAdminDto: CreateAdminDto) {
+  //   console.log('Signininup');
+  //   console.log('DTO', createAdminDto);
+  //   return this.authService.signup(createAdminDto);
+  // }
 
   @Patch('editProfile')
   @UseGuards(JwtAuthGuard)
