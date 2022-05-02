@@ -51,6 +51,9 @@ export class Trip extends BaseEntity {
   @IsBoolean()
   isDestinationReached: boolean;
 
+  @Column({ default: '' })
+  track: string;
+
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
   payementMade: boolean;

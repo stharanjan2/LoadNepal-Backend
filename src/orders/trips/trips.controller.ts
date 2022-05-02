@@ -15,6 +15,8 @@ import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from 'src/users/user.decorators';
+import { UpdateTrackDto } from './dto/update.track.dto';
+import { AddtripDto } from './dto/add-trip';
 
 @Controller('api/test/')
 export class TripsController {
@@ -26,6 +28,18 @@ export class TripsController {
   async create(@Body() createTripDto, @UserDecorator() _admin) {
     return this.tripsService.assignAndAcceptTrips(createTripDto, _admin);
   }
+
+  @Patch('admin/updateTrack')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(JwtAuthGuard)
+  async updateLocation(@Body() updateTrackDto: UpdateTrackDto) {
+    return this.tripsService.updateTrackLocation(updateTrackDto);
+  }
+
+  @Patch('admin/addTrip')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(JwtAuthGuard)
+  async addNewTrip(@Body() addTripDto: AddtripDto) {}
 
   @Get()
   findAll() {

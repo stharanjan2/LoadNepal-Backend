@@ -6,8 +6,10 @@ import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { Order } from '../entities/order.entity';
 import { OrdersService } from '../orders.service';
+import { AddtripDto } from './dto/add-trip';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
+import { UpdateTrackDto } from './dto/update.track.dto';
 import { Trip } from './entities/trip.entity';
 
 @Injectable()
@@ -39,6 +41,41 @@ export class TripsService {
 
   remove(id: number) {
     return `This action removes a #${id} trip`;
+  }
+
+  async addNewTrips(addTripDto: AddtripDto): Promise<Trip> {
+    try {
+      const orderId = addTripDto.order_id;
+
+      const _order = await this.orderService.findOrder(orderId);
+
+      if (_order.noOfTrips >= _order.noOfTruck) {
+        //check if we can add new trips or not(check if no of trips<no of trucks)
+        throw new HttpException(
+          `Can't add new trips. No of truck exceeds no of trips   `,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const userId = _order.user;
+      const createdTrip = this.tripRepository.create(addTripDto);
+      createdTrip.user = userId;
+      _order.addTrips(createdTrip);
+
+      createdTrip.save();
+      _order.save();
+      //TODO Checking promise use for optimization
+      await Promise.all([createdTrip, _order]);
+
+      console.log('New Trip Added ', createdTrip);
+
+      return createdTrip;
+    } catch (error) {
+      console.log('Error on creating  trip', error);
+      throw new HttpException(
+        `Error while creating trip ${error} `,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async assignAndAcceptTrips(
@@ -172,6 +209,24 @@ export class TripsService {
 
       throw new HttpException(
         `Error on fetching assigned trips ${error} `,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async updateTrackLocation(upateTrack: UpdateTrackDto) {
+    try {
+      const trackId = upateTrack.track_id;
+      const location = upateTrack.track;
+      let trackRecord = await this.tripRepository.findOne(trackId);
+      trackRecord.track = location;
+
+      await trackRecord.save();
+      console.log('Updated Track ', trackRecord.track);
+    } catch (error) {
+      console.log('Error while updating track', error);
+      throw new HttpException(
+        `Error on updating track ${error} `,
         HttpStatus.BAD_REQUEST,
       );
     }
