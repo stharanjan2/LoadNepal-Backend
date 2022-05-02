@@ -9,7 +9,6 @@ export class CreateTripDto {
   due: number;
   advance: number;
   amount_paid: any;
-  orderId: number;
 
   trips: any[];
 }

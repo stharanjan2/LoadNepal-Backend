@@ -36,8 +36,7 @@ export class User extends BaseEntity {
   @IsNotEmpty()
   // @Length(5, 100)
   password: string;
-
-  @Column()
+  @Column({ type: 'bigint', default: '0000000000' })
   @IsNotEmpty()
   // @Length(10, 10)
   phoneNumber: number;

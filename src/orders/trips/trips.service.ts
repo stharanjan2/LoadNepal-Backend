@@ -43,10 +43,10 @@ export class TripsService {
     return `This action removes a #${id} trip`;
   }
 
+  // Individually add new trips
   async addNewTrips(addTripDto: AddtripDto): Promise<Trip> {
     try {
       const orderId = addTripDto.order_id;
-
       const _order = await this.orderService.findOrder(orderId);
 
       if (_order.noOfTrips >= _order.noOfTruck) {
