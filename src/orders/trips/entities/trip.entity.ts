@@ -44,6 +44,7 @@ export class Trip extends BaseEntity {
   @Column({ nullable: true })
   driver_username: String;
 
+  //TODO need to chcange it to bigint for better conveninece
   @Column({ nullable: true })
   driver_phoneNumber: String;
 

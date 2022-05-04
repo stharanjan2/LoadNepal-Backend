@@ -1,4 +1,5 @@
 import { IsBoolean, IsNotEmpty } from 'class-validator';
+import { Ledger } from 'src/ledger/entities/ledger.entity';
 import { User } from 'src/users/users.entity';
 import { Vehicle } from 'src/vehicle/vehicle.entity';
 import {
@@ -75,7 +76,7 @@ export class Order extends BaseEntity {
   @Column({ nullable: true })
   customer_username: String;
 
-  @Column({ nullable: true })
+  @Column({ type: 'bigint', default: '0000000000' })
   customer_phoneNumber: number;
 
   @Column({ type: 'boolean', default: false })
@@ -134,10 +135,22 @@ export class Order extends BaseEntity {
   @OneToMany(() => Trip, (trip) => trip.order, { cascade: true })
   trips: Trip[];
 
-  addTrips(trip: Trip) {
+  @OneToOne(() => Ledger, (ledger) => ledger.order, { cascade: true })
+  ledger: Ledger;
+
+  async addTrips(trip: Trip) {
     if (this.trips == null) {
       this.trips = Array<Trip>();
     }
     this.trips.push(trip);
+  }
+
+  async addOrderLedger(ledger: Ledger): Promise<Ledger> {
+    if (this.ledger == null) {
+      this.ledger = ledger;
+      return ledger;
+    } else {
+      return this.ledger;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LedgerService } from 'src/ledger/ledger.service';
 import { NotificationService } from 'src/notification/notification.service';
 import { User } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -20,6 +21,7 @@ export class TripsService {
     private readonly orderService: OrdersService,
     private readonly userService: UsersService,
     private readonly notificationService: NotificationService,
+    private readonly ledgerService: LedgerService,
     @InjectRepository(Trip)
     private readonly tripRepository: Repository<Trip>,
   ) {}
@@ -43,7 +45,7 @@ export class TripsService {
     return `This action removes a #${id} trip`;
   }
 
-  // Individually add new trips
+  // Individually add new trips and update order status and send notifications and update ledger
   async addNewTrips(addTripDto: AddtripDto): Promise<Trip> {
     try {
       const orderId = addTripDto.order_id;
@@ -94,12 +96,22 @@ export class TripsService {
       console.log('ORDER USER', userId);
 
       const { noOfTrips } = createTripDto;
-      let totalPrice = 0;
+      let totalPrice = 0,
+        totalAdvance = 0,
+        totalDue = 0,
+        totalPaid = 0,
+        totalAmount = 0; //Equal to total Price just diff variable name for ledger data
       for (let i = 0; i < noOfTrips; i++) {
         totalPrice += trips[i].total;
+        totalAdvance += trips[i].advance;
+        totalPaid += trips[i].amount_paid;
+        totalDue += trips[i].due;
+        totalAmount += trips[i].total;
+
         trips[i].order = _order._id;
         trips[i].user = userId;
         const returnedTrip = await this.createTrip(trips[i], _order);
+
         _order.addTrips(returnedTrip);
       }
 
@@ -109,6 +121,16 @@ export class TripsService {
       _order.noOfTrips = noOfTrips;
       await _order.save();
       console.log('ADMIN CREATEd TRIPS');
+
+      //TODO tomorrow
+      ///Neew to now call ledger to update ledger
+      this.ledgerService.updateLedger({
+        orderId: _order._id,
+        totalAmount,
+        totalAdvance,
+        totalDue,
+        totalPaid,
+      });
 
       const notificationParamater = {
         title: 'Admin',
@@ -122,6 +144,7 @@ export class TripsService {
         notificationParamater,
         adminId,
       );
+
       return { message: 'Successfully added trips' };
     } catch (error) {
       console.log('ERROR ON CREATING TRIPS', error);

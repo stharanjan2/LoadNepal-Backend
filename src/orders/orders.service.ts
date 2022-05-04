@@ -12,6 +12,8 @@ import { Vehicle } from 'src/vehicle/vehicle.entity';
 import { VehicleService } from 'src/vehicle/vehicle.service';
 import Distance from './entities/utils/distance';
 import { EditOrderDto } from './dto/edit-order-dto';
+import { LedgerService } from 'src/ledger/ledger.service';
+import { Ledger } from 'src/ledger/entities/ledger.entity';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -21,6 +23,7 @@ export class OrdersService {
     private userRepository: Repository<User>,
     private readonly vehicleService: VehicleService,
     private readonly usersService: UsersService,
+    private readonly ledgerService: LedgerService,
   ) {}
 
   async postOrders(createOrderDto: CreateOrderDto, _user): Promise<Order> {
@@ -39,24 +42,33 @@ export class OrdersService {
     }
   }
 
+  //With order also create ledger for same order
+
   async createOrder(createOrderDto: CreateOrderDto, user: User) {
-    console.log('Creating order');
-    const order = this.orderRepository.create(createOrderDto);
-    const _distance: number = await this.calculateDistance(createOrderDto);
-    order.distance = _distance;
-    order.user = user;
-    order.customer_username = user.username;
-    order.customer_phoneNumber = user.phoneNumber;
-
     try {
+      console.log('Creating order');
+      const order: Order = this.orderRepository.create(createOrderDto);
+      const _user = await this.usersService.findUser(user._id);
+      // const _distance: number = await this.calculateDistance(createOrderDto);
+      // order.distance = _distance;
+      order.user = user;
+      order.customer_username = user.username;
+      order.customer_phoneNumber = user.phoneNumber;
       await order.save();
+      const createdLedger = await this.ledgerService.createLedger(
+        order._id,
+        user._id,
+      );
       console.log('Order Created', createOrderDto);
-
+      console.log('Ledger created', createdLedger);
       return order;
     } catch (error) {
       console.log('ERROR IN ORDER', error);
 
-      throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `Error while creating order ${error} `,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 

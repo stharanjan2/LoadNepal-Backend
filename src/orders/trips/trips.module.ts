@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Trip } from './entities/trip.entity';
 import { UsersModule } from 'src/users/users.module';
 import { NotificationModule } from 'src/notification/notification.module';
+import { LedgerModule } from 'src/ledger/ledger.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { NotificationModule } from 'src/notification/notification.module';
     UsersModule,
     OrdersModule,
     NotificationModule,
+    LedgerModule,
   ],
 
   controllers: [TripsController],

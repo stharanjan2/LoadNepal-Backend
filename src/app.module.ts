@@ -15,6 +15,7 @@ import { MailModule } from './mail/mail.module';
 import { AdminModule } from './users/admin/admin.module';
 import { NotificationModule } from './notification/notification.module';
 import { TripsModule } from './orders/trips/trips.module';
+import { LedgerModule } from './ledger/ledger.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TripsModule } from './orders/trips/trips.module';
     MailModule,
     NotificationModule,
     TripsModule,
+    LedgerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,14 +9,16 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import Role from './role.enum';
 import { Order } from 'src/orders/entities/order.entity';
 import { Notification } from 'src/notification/entities/notification.entity';
-import { Cipher, Verify } from 'crypto';
+
 import { Vehicle } from 'src/vehicle/vehicle.entity';
 import { Trip } from 'src/orders/trips/entities/trip.entity';
+import { Ledger } from 'src/ledger/entities/ledger.entity';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -90,10 +92,21 @@ export class User extends BaseEntity {
   @OneToMany(() => Notification, (notification) => notification.receiver)
   notification: Notification[];
 
+  @OneToMany(() => Ledger, (ledger) => ledger.user, { cascade: true })
+  ledgers: Ledger[];
+
+  async addUserToLedger(ledger: Ledger) {
+    if (this.ledgers == null) {
+      this.ledgers = Array<Ledger>();
+    }
+    this.ledgers.push(ledger);
+  }
+
   @BeforeInsert()
   async hashPasswprd() {
     this.password = await bcrypt.hash(this.password, 8);
   }
+
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
