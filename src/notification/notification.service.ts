@@ -20,8 +20,11 @@ export class NotificationService {
   ): Promise<Object> {
     try {
       const { title, message, type, receiverId } = createNotificationDto;
-      const senderId = _user;
+      console.log('ID --------', _user);
+
+      const senderId = _user.userId;
       console.log('NOTIFICTTION SENDER ID', senderId);
+      console.log('NOTIFICATION DTO', createNotificationDto);
 
       const sender = await this.userService.findUser(senderId);
       const receiver = await this.userService.findUser(receiverId);
@@ -42,6 +45,35 @@ export class NotificationService {
       throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
     }
   }
+
+  // async sendAcceptedNotification(
+  //   createNotificationDto: CreateNotificationDto,
+  // ): Promise<Object> {
+  //   try {
+  //     const { title, message, type, receiverId, senderId } =
+  //       createNotificationDto;
+  //     console.log('NOTIFICTTION SENDER ID', senderId);
+  //     console.log('NOTIFICATION DTO', createNotificationDto);
+
+  //     const sender = await this.userService.findUser(senderId);
+  //     const receiver = await this.userService.findUser(receiverId);
+  //     const notification: Notification = this.notificationRepository.create(
+  //       createNotificationDto,
+  //     );
+  //     notification.sender = sender;
+  //     notification.receiver = receiver;
+
+  //     await notification.save();
+  //     console.log('NOTIFICATION CREATED', notification);
+  //     return {
+  //       message: 'Request successful ! , Notification will be sent to cilent',
+  //     };
+  //   } catch (error) {
+  //     console.log('ERROR ON SENDING NOTIFICATION', error);
+
+  //     throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
+  //   }
+  // }
 
   async getNotification(_user): Promise<Notification[]> {
     try {

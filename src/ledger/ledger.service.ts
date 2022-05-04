@@ -24,7 +24,7 @@ export class LedgerService {
   async updateLedger(ledgerData) {
     try {
       console.log('Data from backend-----', ledgerData);
-      const orderId = ledgerData.orderId;
+      const orderId = ledgerData.order;
       const toUpdateLedger = await this.ledgerRepository.findOne({
         where: { order: orderId },
       });

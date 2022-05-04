@@ -125,7 +125,7 @@ export class TripsService {
       //TODO tomorrow
       ///Neew to now call ledger to update ledger
       this.ledgerService.updateLedger({
-        orderId: _order._id,
+        order: _order._id,
         totalAmount,
         totalAdvance,
         totalDue,
@@ -140,10 +140,9 @@ export class TripsService {
         senderId: adminId,
       };
 
-      await this.notificationService.sendNotification(
-        notificationParamater,
-        adminId,
-      );
+      await this.notificationService.sendNotification(notificationParamater, {
+        userId: adminId,
+      });
 
       return { message: 'Successfully added trips' };
     } catch (error) {
