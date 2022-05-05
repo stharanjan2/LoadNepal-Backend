@@ -26,6 +26,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   the return value of our validate() method, and attach it as a property on
    the Request object.
   
+
+This is because for the JWT strategy, passport first verifies the signature of the JWT and 
+decodes the JSON object. Only then does it actually call the validate() 
+function and passes the decoded JSON as payload. Basically, this ensures that if the validate()
+ function is called, it means the JWT is also valid.
+
   */
 
   //First verifies access token and decodes payload as sends it back

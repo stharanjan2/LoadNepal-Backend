@@ -29,6 +29,7 @@ import { EditOrderDto } from 'src/orders/dto/edit-order-dto';
 import { UserDecorator } from 'src/users/user.decorators';
 import { EditUserDto } from 'src/users/dto/edit-user.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
+import { UpdatePassword } from './dto/update-password.dto';
 @ApiTags('authentication')
 @Controller('api/auth')
 export class AuthController {
@@ -122,5 +123,21 @@ export class AuthController {
     console.log('Profile', editUserDto);
 
     return this.authService.editProfile(editUserDto, _user);
+  }
+
+  // Forgot password
+  @Post('forgotPassword')
+  async forgotPassword(@Body() forgotPassword: SendOtpDto) {
+    return this.authService.sendOtp(forgotPassword);
+  }
+
+  @Post('verifyFgOtp')
+  async verifyFgOtp(@Body() verifyFgOtp: VerifyOtpDto) {
+    return this.authService.verifyOtp(verifyFgOtp);
+  }
+
+  @Patch('updatePassword')
+  async updatePassword(@Body() updatePassword: UpdatePassword) {
+    return this.authService.updatePassword(updatePassword);
   }
 }
