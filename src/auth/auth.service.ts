@@ -18,6 +18,8 @@ import { VerifyOtpDto } from './otp/verify.otp.dto';
 import { MailService } from 'src/mail/mail.service';
 import { OtpService } from './otp/otp.service';
 import { EditUserDto } from 'src/users/dto/edit-user.dto';
+import * as bcrypt from 'bcrypt';
+import { UpdatePassword } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -164,6 +166,24 @@ export class AuthService {
       console.log('Error while editing user profile', error);
       throw new HttpException(
         ` ERROR WHILE EDITING PROFILE   ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  //TODO modify it to add to entity
+
+  async updatePassword(updatePassword: UpdatePassword) {
+    const { email, password } = updatePassword;
+    try {
+      const user = await this.userRepository.findOne({ email: email });
+      if (user) {
+        user.password = await bcrypt.hash(password, 8);
+        return await this.userRepository.save(user);
+      }
+    } catch (error) {
+      throw new HttpException(
+        `ERROR WHILE VERIFYING OTP  ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
