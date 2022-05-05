@@ -55,15 +55,15 @@ export class LedgerService {
         .where(`ledger.user = ${_userId}`)
         .select([
           'order._id',
-
           'order.loadFrom',
           'order.unloadTo',
           'order.createdAt',
-
+          'order.updatedAt',
           'ledger._id',
           'ledger.totalAmount',
           'ledger.totalDue',
-          '',
+          'ledger.totalPaid',
+          'ledger.totalAdvance',
         ])
         .getMany();
 
