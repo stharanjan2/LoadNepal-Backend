@@ -16,7 +16,7 @@ import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { UserDecorator } from 'src/users/user.decorators';
 
-@Controller('ledger')
+@Controller('api/test/ledger')
 export class LedgerController {
   constructor(private readonly ledgerService: LedgerService) {}
 

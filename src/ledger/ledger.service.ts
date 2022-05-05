@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { CreateLedgerDto } from './dto/create-ledger.dto';
 import { UpdateLedgerDto } from './dto/update-ledger.dto';
 import { Ledger } from './entities/ledger.entity';
@@ -47,8 +47,27 @@ export class LedgerService {
       });
       console.log('ledger record is ', ledgerRecords);
 
-      return ledgerRecords;
-    } catch (error) {}
+      // return ledgerRecords;
+
+      const ledgers = await this.ledgerRepository
+        .createQueryBuilder('ledger') // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
+        .innerJoinAndSelect('ledger.order', 'order')
+        .where(`ledger.user = ${_userId}`)
+        .select([
+          'order._id',
+          'order.createdAt',
+          'order.loadFrom',
+          'order.unloadTo',
+          'ledger._id',
+          'ledger.totalAmount',
+        ])
+        .getMany();
+
+      return ledgers;
+    } catch (error) {
+      console.log('error ', error);
+      throw new HttpException(` ${error} `, HttpStatus.BAD_REQUEST);
+    }
   }
 
   findAll() {
