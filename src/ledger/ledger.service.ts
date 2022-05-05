@@ -53,6 +53,7 @@ export class LedgerService {
         .createQueryBuilder('ledger') // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
         .innerJoinAndSelect('ledger.order', 'order')
         .where(`ledger.user = ${_userId}`)
+        .andWhere('order.isAccepted=true')
         .select([
           'order._id',
           'order.loadFrom',
