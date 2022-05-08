@@ -22,6 +22,6 @@ import { LedgerModule } from 'src/ledger/ledger.module';
 
   controllers: [OrdersController],
   providers: [OrdersService],
-  exports: [OrdersService],
+  exports: [OrdersService,TypeOrmModule],
 })
 export class OrdersModule {}

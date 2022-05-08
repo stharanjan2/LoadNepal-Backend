@@ -132,17 +132,21 @@ export class Order extends BaseEntity {
   @Column({ default: 0, nullable: true })
   noOfTrips: number;
 
-  @OneToMany(() => Trip, (trip) => trip.order, { cascade: true })
+  @OneToMany(() => Trip, (trip) => trip.order)
   trips: Trip[];
 
-  @OneToOne(() => Ledger, (ledger) => ledger.order, { cascade: true })
+  @OneToOne(() => Ledger, (ledger) => ledger.order)
   ledger: Ledger;
 
   async addTrips(trip: Trip) {
     if (this.trips == null) {
       this.trips = Array<Trip>();
+      console.log('CREATING NEW TRIP ARAY -----------------');
     }
+
+    console.log('AVAILABLE TRIPS', this.trips);
     this.trips.push(trip);
+    console.log('NEW TRIPS----------', this.trips);
   }
 
   async addOrderLedger(ledger: Ledger): Promise<Ledger> {

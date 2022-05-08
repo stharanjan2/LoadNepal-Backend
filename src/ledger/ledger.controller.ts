@@ -25,30 +25,11 @@ export class LedgerController {
     return this.ledgerService.create(createLedgerDto);
   }
 
+  // User views all transactions
   @Get('userLedger')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
   async getLedger(@UserDecorator() _user) {
     return this.ledgerService.findLedger(_user);
-  }
-
-  @Get()
-  findAll() {
-    return this.ledgerService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ledgerService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLedgerDto: UpdateLedgerDto) {
-    return this.ledgerService.update(+id, updateLedgerDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ledgerService.remove(+id);
   }
 }

@@ -20,6 +20,8 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from './user.decorators';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
+
+//---------Admin gets list of all users ---------
 @ApiTags('admin')
 @Controller('users')
 export class UsersController {

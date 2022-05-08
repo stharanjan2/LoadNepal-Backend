@@ -23,7 +23,7 @@ export class SignupMiddleware implements NestMiddleware {
     const { username, email, phoneNumber } = req.body;
     console.log('BODY', req.body);
     //roles is in array so we need first item
-    //SETTING ROLES TO ['user']
+    //SETTING ROLES TO ['user'] 
     const _roles = [Role.USER];
     req.body.roles = _roles;
 

@@ -30,7 +30,6 @@ export class OrdersService {
     try {
       console.log('Posting Orders');
       console.log('ORDER', createOrderDto);
-
       const user: User = await this.verifyOrder(createOrderDto, _user); //Verify whetehr order meets certain criterai and return back user
       // await this.createOrders(createOrderDto, user); //Finally call create orders to crete orders
       const postedOrder = await this.createOrder(createOrderDto, user);
@@ -55,6 +54,7 @@ export class OrdersService {
       order.customer_username = user.username;
       order.customer_phoneNumber = user.phoneNumber;
       await order.save();
+      await user.save();
       const createdLedger = await this.ledgerService.createLedger(
         order._id,
         user._id,

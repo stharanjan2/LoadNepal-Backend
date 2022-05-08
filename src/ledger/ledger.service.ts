@@ -29,6 +29,14 @@ export class LedgerService {
         where: { order: orderId },
       });
       delete ledgerData.orderId;
+
+      ledgerData.totalAdvance += toUpdateLedger.totalAdvance;
+      ledgerData.totalAmount += toUpdateLedger.totalAmount;
+      ledgerData.totalDue += toUpdateLedger.totalDue;
+      ledgerData.totalPaid += toUpdateLedger.totalPaid;
+
+      
+
       console.log('Found ledger', toUpdateLedger);
       let updateLedger = Object.assign(toUpdateLedger, ledgerData);
       await toUpdateLedger.save();

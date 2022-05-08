@@ -16,12 +16,13 @@ import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from 'src/users/user.decorators';
 import { UpdateTrackDto } from './dto/update.track.dto';
-import { AddtripDto } from './dto/add-trip';
+import { AddtripDto } from './dto/add-trip.dto';
 
 @Controller('api/test/')
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
+  // ----Admin creates trips (add trips in bulk)
   @Post('admin/createTrips')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
@@ -29,6 +30,7 @@ export class TripsController {
     return this.tripsService.assignAndAcceptTrips(createTripDto, _admin);
   }
 
+  // Admin updates order location
   @Patch('admin/updateTrack')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
@@ -36,40 +38,25 @@ export class TripsController {
     return this.tripsService.updateTrackLocation(updateTrackDto);
   }
 
+  // Add new trips individually-----
   @Patch('admin/addTrip')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
-  async addNewTrip(@Body() addTripDto: AddtripDto) {}
-
-  @Get()
-  findAll() {
-    return this.tripsService.findAll();
+  async addNewTrip(@Body() addTripDto: AddtripDto) {
+    return this.tripsService.addNewTrips(addTripDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tripsService.findOne(+id);
-  }
+  // @Post('admin/createTrips')
+  // @UseGuards(RoleGuard(Role.ADMIN))
+  // @UseGuards(JwtAuthGuard)
+  // async createAndAssignTrips(
+  //   @Body() requestBody: CreateTripDto,
+  //   @UserDecorator() _user,
+  // ) {
+  //   return this.tripsService.assignAndAcceptTrips(requestBody, _user);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTripDto: UpdateTripDto) {
-    return this.tripsService.update(+id, updateTripDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tripsService.remove(+id);
-  }
-
-  @Post('admin/createTrips')
-  @UseGuards(RoleGuard(Role.ADMIN))
-  @UseGuards(JwtAuthGuard)
-  async createAndAssignTrips(
-    @Body() requestBody: CreateTripDto,
-    @UserDecorator() _user,
-  ) {
-    return this.tripsService.assignAndAcceptTrips(requestBody, _user);
-  }
+  //------Admin can edit trip details
 
   //TODO Edit trips dto not implemented
   @Patch('admin/editTrips')
@@ -78,6 +65,8 @@ export class TripsController {
   async editTrips(@Body() editTripDto) {
     return this.tripsService.editTrips(editTripDto);
   }
+
+  //-----User/admin can view assigned trips to particular order----
 
   //TODO make better specification in paramater
   @Post('viewAssignedTrips')

@@ -23,7 +23,7 @@ import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  //FIXME ADDITIONAL DESRIPRION NOT WORKING DONT KNOW WHY NEED TO BE FIXED
+  //-------User post new order-------------
   @Post('user/postOrder')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
@@ -37,6 +37,8 @@ export class OrdersController {
 
     return this.ordersService.postOrders(createOrderDto, _user);
   }
+
+  //------- Driver side apis (currently not being used)----------
 
   @Get('driver/filter/orders')
   @UseGuards(RoleGuard(Role.DRIVER))
@@ -66,7 +68,7 @@ export class OrdersController {
     return this.ordersService.viewAcceptedOrderUser(_user);
   }
 
-  //TODO Need to stup lockiing feature
+  //TODO Need to stup locking feature
   @Patch('driver/lockRequest/:orderId')
   @UseGuards(RoleGuard(Role.DRIVER))
   @UseGuards(JwtAuthGuard)
@@ -83,23 +85,5 @@ export class OrdersController {
     @UserDecorator() _user,
   ) {
     this.ordersService.acceptOrder(_orderId, _vehicle, _user);
-  }
-
-  // @ApiResponse({ status: 403 })
-  // @Get('user/viewAcceptedOrderDriver/:id')
-  // @UseGuards(RoleGuard(Role.DRIVER))
-  // @UseGuards(JwtAuthGuard)
-  // async viewAcceptedOrderDriver(@UserDecorator() _user) {
-  //   return this.ordersService.viewAcceptedOrderDriver(_user);
-  // }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
   }
 }

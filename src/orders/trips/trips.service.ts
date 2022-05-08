@@ -7,7 +7,7 @@ import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { Order } from '../entities/order.entity';
 import { OrdersService } from '../orders.service';
-import { AddtripDto } from './dto/add-trip';
+import { AddtripDto } from './dto/add-trip.dto';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { UpdateTrackDto } from './dto/update.track.dto';
@@ -18,10 +18,13 @@ export class TripsService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>,
     private readonly orderService: OrdersService,
     private readonly userService: UsersService,
     private readonly notificationService: NotificationService,
     private readonly ledgerService: LedgerService,
+
     @InjectRepository(Trip)
     private readonly tripRepository: Repository<Trip>,
   ) {}
@@ -45,11 +48,45 @@ export class TripsService {
     return `This action removes a #${id} trip`;
   }
 
+  //FIXME whenrever try to save both  order and trip null value in set in trips.order_id foreign key reference, need to fix this
+  async addNewTrips(addTripDto: AddtripDto) {
+    try {
+      console.log('ADD trip dto', addTripDto);
+      const _order: Order = await this.orderService.findOrder(
+        addTripDto.order_id,
+      );
+      console.log('Order', _order);
+
+      console.log('Order found for trip');
+      const userID: User = _order.user;
+      const orderId: Order = _order;
+      console.log('ORDER________ order,user', _order._id, userID);
+
+      const trip = this.tripRepository.create(addTripDto);
+      trip.user = userID;
+      trip.order = _order;
+      await trip.save();
+   
+
+      return trip;
+    } catch (error) {
+      console.log('ERROR', error);
+      throw new HttpException(
+        `Error while adding ${error} `,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  /*
+
   // Individually add new trips and update order status and send notifications and update ledger
-  async addNewTrips(addTripDto: AddtripDto): Promise<Trip> {
+  async addNewTrips(addTripDto: AddtripDto): Promise<any> {
     try {
       const orderId = addTripDto.order_id;
       const _order = await this.orderService.findOrder(orderId);
+
+      console.log('FOUND ORDER', _order);
 
       if (_order.noOfTrips >= _order.noOfTruck) {
         //check if we can add new trips or not(check if no of trips<no of trucks)
@@ -59,17 +96,41 @@ export class TripsService {
         );
       }
       const userId = _order.user;
+      //TODO Doesn't work referencing without deleting orer_id dontknow why
+      // delete addTripDto.order_id;
+      // addTripDto.order = _order_id;
+      addTripDto.user = userId;
+      // addTripDto.order = _order._id;
+
+      // const returnCreatedTrips =
+      // const createdTrip = await this.createTrip(addTripDto, _order);
       const createdTrip = this.tripRepository.create(addTripDto);
-      createdTrip.user = userId;
-      _order.addTrips(createdTrip);
 
-      createdTrip.save();
-      _order.save();
+      // await createdTrip.save();
+      // await createdTrip.save();
+
+      // createdTrip.user = userId;
+      await createdTrip.save();
+
+      await _order.addTrips(createdTrip);
+
+      this.ledgerService.updateLedger({
+        order: _order._id,
+        totalAmount: addTripDto.total,
+        totalAdvance: addTripDto.advance,
+        totalDue: addTripDto.due,
+        totalPaid: addTripDto.amount_paid,
+      });
+
+      // createdTrip.save();
+      // _order.save();
+
       //TODO Checking promise use for optimization
-      await Promise.all([createdTrip, _order]);
+      // await Promise.all([createdTrip.save(), _order.save()]);
 
+      // await createdTrip.save()
+      // await _order.save()
       console.log('New Trip Added ', createdTrip);
-
       return createdTrip;
     } catch (error) {
       console.log('Error on creating  trip', error);
@@ -79,6 +140,8 @@ export class TripsService {
       );
     }
   }
+
+  */
 
   async assignAndAcceptTrips(
     createTripDto: CreateTripDto,
@@ -116,6 +179,9 @@ export class TripsService {
       }
 
       console.log('All trips created');
+
+      //FIXME need to add different route for accept order
+
       _order.isAccepted = true;
       _order.price = totalPrice;
       _order.noOfTrips = noOfTrips;

@@ -48,17 +48,6 @@ export class AuthController {
     return this.authService.login(authLoginDto);
   }
 
-  // @Get()
-  // @UseGuards(JwtAuthGuard)
-  // async test(@Headers() header) {
-  //   const head = header['x-access-token'];
-  //   console.log('HEadter', head);
-  //   console.log('Decoded from header', jwt_decode(head));
-
-  //   // console.log('cool validation', this.jwtStrategy.validate());
-  //   return 'Successful person';
-  // }
-
   // --------------- OTP ---------------
   @Post('sendOtp')
   async sendOtp(@Body() sendOtpDto: SendOtpDto) {
@@ -109,14 +98,7 @@ export class AuthController {
     return this.authService.signup(createUserDto);
   }
 
-  // @UsePipes(new ValidationPipe())
-  // @Post('admin/signup')
-  // async createAdmin(@Body() createAdminDto: CreateAdminDto) {
-  //   console.log('Signininup');
-  //   console.log('DTO', createAdminDto);
-  //   return this.authService.signup(createAdminDto);
-  // }
-
+  //----------------User Profile edit---------------------------
   @Patch('editProfile')
   @UseGuards(JwtAuthGuard)
   async editProfile(@Body() editUserDto: EditUserDto, @UserDecorator() _user) {
@@ -125,7 +107,7 @@ export class AuthController {
     return this.authService.editProfile(editUserDto, _user);
   }
 
-  // Forgot password
+  // ----------------------------Forgot password-------------------------------------
   @Post('forgotPassword')
   async forgotPassword(@Body() forgotPassword: SendOtpDto) {
     return this.authService.sendOtp(forgotPassword);

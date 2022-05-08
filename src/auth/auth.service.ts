@@ -173,13 +173,15 @@ export class AuthService {
 
   //TODO modify it to add to entity
 
-  async updatePassword(updatePassword: UpdatePassword) {
+  async updatePassword(updatePassword: UpdatePassword): Promise<User> {
     const { email, password } = updatePassword;
     try {
       const user = await this.userRepository.findOne({ email: email });
       if (user) {
         user.password = await bcrypt.hash(password, 8);
-        return await this.userRepository.save(user);
+        await this.userRepository.save(user);
+        delete user.password;
+        return user;
       }
     } catch (error) {
       throw new HttpException(

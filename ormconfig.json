@@ -9,5 +9,6 @@
   "synchronize": true,
   "migrations": ["dist/migrations/*{.ts,.js}"],
   "migrationsTableName": "migrations_typeorm",
-  "migrationsRun": false
+  "migrationsRun": false,
+  "logging": true
 }

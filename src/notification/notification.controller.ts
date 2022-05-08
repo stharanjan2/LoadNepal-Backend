@@ -16,6 +16,7 @@ import RoleGuard from 'src/users/role.guard';
 import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
+// ----------------To send notification to concerened user----------------
 @Controller('api/test/notification')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
@@ -33,6 +34,7 @@ export class NotificationController {
     );
   }
 
+  // --------Get all unread notifications------------------
   @Get('getNotification')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
@@ -40,27 +42,11 @@ export class NotificationController {
     return this.notificationService.getNotification(_user);
   }
 
+  //-----------Update notification as read ---------------------
   @Patch('updateIsViewed')
   @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
   updateIsViewed(@UserDecorator() _user) {
     return this.notificationService.updateIsViewed(_user);
   }
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.notificationService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateNotificationDto: UpdateNotificationDto,
-  // ) {
-  //   return this.notificationService.update(+id, updateNotificationDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.notificationService.remove(+id);
-  // }
 }
