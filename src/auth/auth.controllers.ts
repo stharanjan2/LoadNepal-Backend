@@ -110,7 +110,7 @@ export class AuthController {
   // ----------------------------Forgot password-------------------------------------
   @Post('forgotPassword')
   async forgotPassword(@Body() forgotPassword: SendOtpDto) {
-    return this.authService.sendOtp(forgotPassword);
+    return this.authService.sendOtpForget(forgotPassword);
   }
 
   @Post('verifyFgOtp')

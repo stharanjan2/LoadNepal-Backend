@@ -147,6 +147,26 @@ export class AuthService {
     }
   }
 
+  // check if the user exist for forget password OTP
+
+  async sendOtpForget(forgotPassword: SendOtpDto) {
+    const { email } = forgotPassword;
+
+    try {
+      const user = await this.userRepository.findOne({ email: email });
+
+      if (!user) {
+        throw new HttpException(
+          `User not found with entered credentials `,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return await this.sendOtp(forgotPassword);
+    } catch (error) {
+      throw new HttpException(`: ${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async editProfile(editUserDto: EditUserDto, _user): Promise<Object> {
     try {
       console.log('Edit paramaters', editUserDto);
