@@ -146,7 +146,8 @@ export class OrdersService {
       const user: User = await this.usersService.findUser(_userId);
 
       const orders = await this.orderRepository.find({
-        user: user,
+        where: { user: user },
+        order: { _id: 'ASC' },
       });
 
       console.log('USER VIEWS HIS ALL ORDERS', orders);
@@ -272,7 +273,7 @@ export class OrdersService {
   //TODO change this to make more abstract and use repository pattern
   async adminViewAllOrders(): Promise<Order[]> {
     try {
-      return await Order.find({});
+      return await Order.find({ order: { _id: 'ASC' } });
     } catch (error) {
       throw new HttpException(
         `Error on fetching all orders ${error}`,
