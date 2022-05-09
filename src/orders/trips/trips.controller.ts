@@ -22,7 +22,7 @@ import { AddtripDto } from './dto/add-trip.dto';
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
-  // ----Admin creates trips (add trips in bulk)
+  // ----Admin creates trips Inititally (add trips in bulk)
   @Post('admin/createTrips')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)

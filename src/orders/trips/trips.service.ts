@@ -52,20 +52,39 @@ export class TripsService {
   async addNewTrips(addTripDto: AddtripDto) {
     try {
       console.log('ADD trip dto', addTripDto);
+      const { total, due, advance, amount_paid } = addTripDto;
       const _order: Order = await this.orderService.findOrder(
         addTripDto.order_id,
       );
-      console.log('Order', _order);
 
-      console.log('Order found for trip');
-      const userID: User = _order.user;
-      const orderId: Order = _order;
-      console.log('ORDER________ order,user', _order._id, userID);
+      if (!_order) {
+        throw new HttpException(
+          `Can't find requested order`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
+      //Check if noOfTrips exceeds noOfTruck
+      if (_order.noOfTrips >= _order.noOfTruck) {
+        //check if we can add new trips or not(check if no of trips<no of trucks)
+        throw new HttpException(
+          `Can't add new trips. No of truck exceeds no of trips   `,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const user: User = _order.user;
       const trip = this.tripRepository.create(addTripDto);
-      trip.user = userID;
+      trip.user = user;
       trip.order = _order;
       await trip.save();
+      await this.orderService.updateNoOfTrips(_order._id, ++_order.noOfTrips);
+      await this.ledgerService.updateLedger({
+        order: _order._id,
+        totalAmount: total,
+        totalAdvance: advance,
+        totalDue: due,
+        totalPaid: amount_paid,
+      });
       return trip;
     } catch (error) {
       console.log('ERROR', error);
@@ -282,7 +301,6 @@ export class TripsService {
     try {
       console.log('oRDER ID', body.orderId);
       const orderId = body.orderId;
-
 
       const tripsRecord = await this.tripRepository.find({
         order: orderId,

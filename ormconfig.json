@@ -10,5 +10,5 @@
   "migrations": ["dist/migrations/*{.ts,.js}"],
   "migrationsTableName": "migrations_typeorm",
   "migrationsRun": false,
-  "logging": true
+  "logging": false
 }

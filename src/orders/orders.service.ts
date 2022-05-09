@@ -294,8 +294,22 @@ export class OrdersService {
     }
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async updateNoOfTrips(id: number|Number, noOfTrips: number) {
+    try {
+      const updatedOrder = await this.orderRepository
+        .createQueryBuilder()
+        .update(Order)
+        .set({ noOfTrips: noOfTrips })
+        .where('_id = :_id', { _id: id })
+        .execute();
+
+      console.log('Updated order is', updatedOrder);
+    } catch (error) {
+      throw new HttpException(
+        `Problem in updating order  ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   remove(id: number) {
