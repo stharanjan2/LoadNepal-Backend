@@ -294,7 +294,7 @@ export class OrdersService {
     }
   }
 
-  async updateNoOfTrips(id: number|Number, noOfTrips: number) {
+  async updateNoOfTrips(id: number | Number, noOfTrips: number) {
     try {
       const updatedOrder = await this.orderRepository
         .createQueryBuilder()
@@ -304,6 +304,22 @@ export class OrdersService {
         .execute();
 
       console.log('Updated order is', updatedOrder);
+    } catch (error) {
+      throw new HttpException(
+        `Problem in updating order  ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async updatePrice(id: number | Number, price: number) {
+    try {
+      const updatedOrder = await this.orderRepository
+        .createQueryBuilder()
+        .update(Order)
+        .set({ price: price })
+        .where('_id = :_id', { _id: id })
+        .execute();
     } catch (error) {
       throw new HttpException(
         `Problem in updating order  ${error}`,

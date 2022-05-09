@@ -261,6 +261,12 @@ export class TripsService {
       const { trips, noOfTrips } = editTripDto;
       const orderId = editTripDto.order_id;
       const _order = await this.orderService.findOrder(orderId);
+      if (!_order) {
+        throw new HttpException(
+          `Error no order found of given order id `,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       let totalPrice = 0;
       for (let i = 0; i < noOfTrips; i++) {
         // totalPrice += trips[i].total;
@@ -269,8 +275,9 @@ export class TripsService {
         totalPrice += editedTrip.total;
       }
 
-      _order.price = totalPrice;
-      await _order.save();
+      await this.orderService.updatePrice(_order._id, totalPrice);
+      // _order.price = totalPrice;
+      // await _order.save();
       console.log('TRIPS EDITED SUCCESSFUL');
 
       return { message: 'Trips edited successfully' };
