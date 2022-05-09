@@ -17,7 +17,7 @@ export class OtpService {
     return _OTP;
   }
 
-  async send(_emailAddress: String): Promise<Otp> {
+  async send(_emailAddress: String | string): Promise<Otp> {
     console.log('OTP SENDING---- ');
 
     const oldOtp = await this.otpRepository.findOne({ email: _emailAddress });

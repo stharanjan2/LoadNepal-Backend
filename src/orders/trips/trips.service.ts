@@ -66,8 +66,6 @@ export class TripsService {
       trip.user = userID;
       trip.order = _order;
       await trip.save();
-   
-
       return trip;
     } catch (error) {
       console.log('ERROR', error);
@@ -284,6 +282,7 @@ export class TripsService {
     try {
       console.log('oRDER ID', body.orderId);
       const orderId = body.orderId;
+
 
       const tripsRecord = await this.tripRepository.find({
         order: orderId,
