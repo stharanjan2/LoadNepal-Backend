@@ -36,7 +36,6 @@ export class NotificationController {
 
   // --------Get all unread notifications------------------
   @Get('getNotification')
-  @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
   getNotification(@UserDecorator() _user) {
     return this.notificationService.getNotification(_user);
@@ -44,7 +43,7 @@ export class NotificationController {
 
   //-----------Update notification as read ---------------------
   @Patch('updateIsViewed')
-  @UseGuards(RoleGuard(Role.USER))
+  // @UseGuards(RoleGuard(Role.USER))
   @UseGuards(JwtAuthGuard)
   updateIsViewed(@UserDecorator() _user) {
     return this.notificationService.updateIsViewed(_user);
