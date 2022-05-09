@@ -52,6 +52,7 @@ export class TripsService {
   async addNewTrips(addTripDto: AddtripDto) {
     try {
       console.log('ADD trip dto', addTripDto);
+      addTripDto.order_id = addTripDto._id;
       const { total, due, advance, amount_paid } = addTripDto;
       const _order: Order = await this.orderService.findOrder(
         addTripDto.order_id,

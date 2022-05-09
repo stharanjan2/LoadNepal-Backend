@@ -4,6 +4,7 @@ import { User } from 'src/users/users.entity';
 export class AddtripDto {
   //   order_id: any;
   @IsNotEmpty()
+  _id: number;
   order_id: number;
   @IsNotEmpty()
   driver_username: string;
