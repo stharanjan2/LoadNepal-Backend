@@ -133,7 +133,6 @@ export class AuthService {
       const _otpEntity = await this.otpService.send(email);
       return {
         message: 'Successfully sent Otp',
-        otp: _otpEntity.otp,
         email: _otpEntity.email,
       };
     } catch (error) {
