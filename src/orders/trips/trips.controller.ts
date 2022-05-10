@@ -74,4 +74,14 @@ export class TripsController {
   async viewAssignedTrips(@Body() body) {
     return this.tripsService.viewAssignedTrips(body);
   }
+
+  @Post('admin/updateTripStatus')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(JwtAuthGuard)
+  async updateTripStatus(@Body() body, @UserDecorator() _admin) {}
+
+  // @Post('trips')
+  // async getTrip(@Body() tripid) {
+  //   return this.tripsService.findTrip(tripid._id);
+  // }
 }

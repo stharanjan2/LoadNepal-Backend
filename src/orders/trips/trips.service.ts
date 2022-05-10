@@ -36,16 +36,35 @@ export class TripsService {
     return `This action returns all trips`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} trip`;
-  }
-
   update(id: number, updateTripDto: UpdateTripDto) {
     return `This action updates a #${id} trip`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} trip`;
+  }
+
+  async findTrip(_tripId): Promise<Trip> {
+    try {
+      console.log('TRIp IS', _tripId);
+
+      const trip = await this.tripRepository.findOne({
+        where: { _id: _tripId },
+        loadRelationIds: true,
+      });
+      if (!trip) {
+        throw new HttpException(
+          `No trip found with given id ${_tripId}`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return trip;
+    } catch (error) {
+      throw new HttpException(
+        `Error on finding trip ${error}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   //FIXME whenrever try to save both  order and trip null value in set in trips.order_id foreign key reference, need to fix this
@@ -172,6 +191,7 @@ export class TripsService {
       const orderId = createTripDto.order_id;
       const _order = await this.orderService.findOrder(orderId);
       const userId = _order.user;
+      
       // const _user=await this.userService.findUser(userId)
 
       console.log('ORDER USER', userId);
@@ -216,17 +236,17 @@ export class TripsService {
         totalPaid,
       });
 
-      const notificationParamater = {
-        title: 'Admin',
-        message: 'Your order has been accepted',
-        type: 'order_accepted',
-        receiverId: userId,
-        senderId: adminId,
-      };
+      // const notificationParamater = {
+      //   title: 'Admin',
+      //   message: 'Your order has been accepted',
+      //   type: 'order_accepted',
+      //   receiverId: userId,
+      //   senderId: adminId,
+      // };
 
-      await this.notificationService.sendNotification(notificationParamater, {
-        userId: adminId,
-      });
+      // await this.notificationService.sendNotification(notificationParamater, {
+      //   userId: adminId,
+      // });
 
       return { message: 'Successfully added trips' };
     } catch (error) {
@@ -340,6 +360,61 @@ export class TripsService {
       console.log('Error while updating track', error);
       throw new HttpException(
         `Error on updating track ${error} `,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  // Update status of trip by query  possible query update status are  isAccepted,isConfirmed,isShipped,isDestinationReached
+  async updateTripStatus(body, _admin) {
+    try {
+      const adminId = _admin.userId;
+      const { tripId, updateParamater } = body;
+      const _trip = await this.findTrip(tripId);
+      const userId = _trip.user;
+      let messageType = '';
+
+      if (!_trip) {
+        throw new HttpException(
+          `Error on updating status: No trip found of given trip id`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      switch (updateParamater) {
+        case 'accept':
+          _trip.isAccepted = true;
+          messageType = 'accepted';
+          break;
+        case 'confirm':
+          _trip.isConfirmed = true;
+          messageType: 'confirmed';
+
+        case 'ship':
+          _trip.isShipped = true;
+          messageType = 'shipped';
+          break;
+        case 'destination':
+          _trip.isDestinationReached = true;
+          messageType = 'at destination';
+          break;
+        // case 'complete':
+        //   _order.isCompleted = true;
+        //   messageType = 'completed';
+        //   break;
+        // default:
+      }
+      await _trip.save();
+
+      const notificationParamater = {
+        title: 'Admin',
+        message: `Your order is ${messageType}`,
+        type: `order_${updateParamater}`,
+        receiverId: userId,
+        senderId: adminId,
+      };
+    } catch (error) {
+      throw new HttpException(
+        `Error on updating trip status ${error}`,
         HttpStatus.BAD_REQUEST,
       );
     }
