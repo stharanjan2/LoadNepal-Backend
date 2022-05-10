@@ -105,6 +105,15 @@ export class AuthService {
   async sendOtp(otpDto: SendOtpDto) {
     const { email } = otpDto;
     console.log('RECEIVED MAIL', email);
+    const _user = await this.userService.findOneByEmail(email);
+    if (_user) {
+      console.log('User', _user);
+
+      throw new HttpException(
+        `Error: User Already exists for given email address`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     try {
       const _otpEntity = await this.otpService.send(email);
       return {

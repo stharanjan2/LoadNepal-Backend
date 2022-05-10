@@ -39,8 +39,8 @@ export class UsersService {
     return user;
   }
 
-  async findOne(phoneNumber: number): Promise<User | undefined> {
-    return this.userRepository.findOne({ phoneNumber: phoneNumber });
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ email: email });
   }
 
   async findUsersByQuery(condition: object): Promise<User[]> {

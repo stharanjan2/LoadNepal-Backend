@@ -4,7 +4,7 @@ import { User } from 'src/users/users.entity';
 export class AddtripDto {
   //   order_id: any;
   @IsNotEmpty()
-  _id: number;
+  _id: number;  //backend is sending order id as _id so we are mapping it to order_id in backend
   order_id: number;
   @IsNotEmpty()
   driver_username: string;
