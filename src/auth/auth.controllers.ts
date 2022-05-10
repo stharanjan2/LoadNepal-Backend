@@ -51,7 +51,7 @@ export class AuthController {
   // --------------- OTP ---------------
   @Post('sendOtp')
   async sendOtp(@Body() sendOtpDto: SendOtpDto) {
-    return this.authService.sendOtp(sendOtpDto);
+    return this.authService.newSignupSendOtp(sendOtpDto);
   }
 
   @Post('verifyOtp')
