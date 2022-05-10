@@ -42,8 +42,8 @@ export class TripsController {
   @Patch('admin/addTrip')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
-  async addNewTrip(@Body() addTripDto: AddtripDto) {
-    return this.tripsService.addNewTrips(addTripDto);
+  async addNewTrip(@Body() addTripDto: AddtripDto,@UserDecorator() _admin) {
+    return this.tripsService.addNewTrips(addTripDto,_admin);
   }
 
   // @Post('admin/createTrips')

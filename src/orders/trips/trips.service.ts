@@ -68,7 +68,7 @@ export class TripsService {
   }
 
   //FIXME whenrever try to save both  order and trip null value in set in trips.order_id foreign key reference, need to fix this
-  async addNewTrips(addTripDto: AddtripDto) {
+  async addNewTrips(addTripDto: AddtripDto, _admin) {
     try {
       console.log('ADD trip dto', addTripDto);
       addTripDto.order_id = addTripDto._id;
@@ -76,6 +76,8 @@ export class TripsService {
       const _order: Order = await this.orderService.findOrder(
         addTripDto.order_id,
       );
+      const userId = _order.user;
+      const adminId = _admin.userId;
 
       if (!_order) {
         throw new HttpException(
@@ -105,6 +107,19 @@ export class TripsService {
         totalDue: due,
         totalPaid: amount_paid,
       });
+
+      const notificationParamater = {
+        title: 'Admin',
+        message: `Your trip ${trip._id} of order ${_order._id} has been accepted `,
+        type: 'trip_accepted',
+        receiverId: userId,
+        senderId: adminId,
+      };
+
+      await this.notificationService.sendNotification(notificationParamater, {
+        userId: adminId,
+      });
+
       return trip;
     } catch (error) {
       console.log('ERROR', error);
@@ -191,7 +206,7 @@ export class TripsService {
       const orderId = createTripDto.order_id;
       const _order = await this.orderService.findOrder(orderId);
       const userId = _order.user;
-      
+
       // const _user=await this.userService.findUser(userId)
 
       console.log('ORDER USER', userId);
@@ -214,6 +229,18 @@ export class TripsService {
         const returnedTrip = await this.createTrip(trips[i], _order);
 
         _order.addTrips(returnedTrip);
+
+        const notificationParamater = {
+          title: 'Admin',
+          message: `Your trip ${returnedTrip._id} of order ${_order._id} has been accepted `,
+          type: 'trip_accepted',
+          receiverId: userId,
+          senderId: adminId,
+        };
+
+        await this.notificationService.sendNotification(notificationParamater, {
+          userId: adminId,
+        });
       }
 
       console.log('All trips created');
@@ -235,18 +262,6 @@ export class TripsService {
         totalDue,
         totalPaid,
       });
-
-      // const notificationParamater = {
-      //   title: 'Admin',
-      //   message: 'Your order has been accepted',
-      //   type: 'order_accepted',
-      //   receiverId: userId,
-      //   senderId: adminId,
-      // };
-
-      // await this.notificationService.sendNotification(notificationParamater, {
-      //   userId: adminId,
-      // });
 
       return { message: 'Successfully added trips' };
     } catch (error) {
