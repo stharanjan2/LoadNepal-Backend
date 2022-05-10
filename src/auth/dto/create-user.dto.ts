@@ -32,7 +32,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly state: string;
   // readonly identification: string;
-  @IsNotEmpty()
+
   readonly pan: string;
   // @IsNotEmpty()
   // roles: Role;

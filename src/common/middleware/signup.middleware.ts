@@ -30,9 +30,6 @@ export class SignupMiddleware implements NestMiddleware {
     const user = await this.userRepository.findOne({
       where: [
         {
-          username: username,
-        },
-        {
           email: email,
         },
         {
