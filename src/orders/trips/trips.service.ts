@@ -79,12 +79,6 @@ export class TripsService {
       const userId = _order.user;
       const adminId = _admin.userId;
 
-      if (!_order) {
-        throw new HttpException(
-          `Can't find requested order`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
 
       //Check if noOfTrips exceeds noOfTruck
       if (_order.noOfTrips >= _order.noOfTruck) {
@@ -110,7 +104,7 @@ export class TripsService {
 
       const notificationParamater = {
         title: 'Admin',
-        message: `Your trip ${trip._id} of order ${_order._id} has been accepted `,
+        message: `Your trip id ${trip._id} of order id ${_order._id} has been accepted `,
         type: 'trip_accepted',
         receiverId: userId,
         senderId: adminId,

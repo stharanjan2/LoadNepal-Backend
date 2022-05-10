@@ -35,8 +35,6 @@ export class LedgerService {
       ledgerData.totalDue += toUpdateLedger.totalDue;
       ledgerData.totalPaid += toUpdateLedger.totalPaid;
 
-      
-
       console.log('Found ledger', toUpdateLedger);
       let updateLedger = Object.assign(toUpdateLedger, ledgerData);
       await toUpdateLedger.save();
@@ -52,6 +50,7 @@ export class LedgerService {
       await this.userService.findUser(_userId);
       const ledgerRecords = await this.ledgerRepository.find({
         where: { user: _userId },
+        order: { _id: 'ASC' },
       });
       console.log('ledger record is ', ledgerRecords);
 
