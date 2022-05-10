@@ -48,13 +48,6 @@ export class LedgerService {
     try {
       const _userId = _user.userId;
       await this.userService.findUser(_userId);
-      const ledgerRecords = await this.ledgerRepository.find({
-        where: { user: _userId },
-        order: { _id: 'ASC' },
-      });
-      console.log('ledger record is ', ledgerRecords);
-
-      // return ledgerRecords;
 
       const ledgers = await this.ledgerRepository
         .createQueryBuilder('ledger') // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
@@ -73,6 +66,8 @@ export class LedgerService {
           'ledger.totalPaid',
           'ledger.totalAdvance',
         ])
+        .orderBy('ledger._id', 'ASC')
+
         .getMany();
 
       return ledgers;
