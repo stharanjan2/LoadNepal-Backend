@@ -32,7 +32,7 @@ export class CreateUserDto {
   @IsNumber()
   readonly phoneNumber: number;
 
-  @IsNotEmpty()
+  @IsString()
   readonly pan: string;
 
   readonly identifiaction: string;
