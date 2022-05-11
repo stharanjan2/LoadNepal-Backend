@@ -11,6 +11,7 @@ import { AddtripDto } from './dto/add-trip.dto';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
 import { UpdateTrackDto } from './dto/update.track.dto';
+import { UpdateTripStatusDto } from './dto/update.tripStatus.dto';
 import { Trip } from './entities/trip.entity';
 
 @Injectable()
@@ -215,7 +216,6 @@ export class TripsService {
         totalPaid = 0,
         totalAmount = 0; //Equal to total Price just diff variable name for ledger data
       for (let i = 0; i < noOfTrips; i++) {
-
         trips[i].due = trips[i].total - trips[i].amount_payed;
         totalPrice += trips[i].total;
         totalAdvance += trips[i].advance;
@@ -380,7 +380,7 @@ export class TripsService {
 
   async updateTrackLocation(upateTrack: UpdateTrackDto) {
     try {
-      const trackId = upateTrack.track_id;
+      const trackId = upateTrack.trip_id;
       const location = upateTrack.track;
       let trackRecord = await this.tripRepository.findOne(trackId);
       trackRecord.track = location;
@@ -397,20 +397,17 @@ export class TripsService {
   }
 
   // Update status of trip by query  possible query update status are  isAccepted,isConfirmed,isShipped,isDestinationReached
-  async updateTripStatus(body, _admin) {
+  async updateTripStatus(
+    updateTripstatusDto: UpdateTripStatusDto,
+    _admin,
+  ): Promise<any> {
     try {
       const adminId = _admin.userId;
-      const { tripId, updateParamater } = body;
-      const _trip = await this.findTrip(tripId);
+      const { trip_id, updateParamater } = updateTripstatusDto;
+      const _trip = await this.findTrip(trip_id);
       const userId = _trip.user;
       let messageType = '';
 
-      if (!_trip) {
-        throw new HttpException(
-          `Error on updating status: No trip found of given trip id`,
-          HttpStatus.NOT_FOUND,
-        );
-      }
       switch (updateParamater) {
         case 'accept':
           _trip.isAccepted = true;
@@ -443,6 +440,8 @@ export class TripsService {
         receiverId: userId,
         senderId: adminId,
       };
+      this.notificationService.sendNotification(notificationParamater, _admin);
+      return;
     } catch (error) {
       throw new HttpException(
         `Error on updating trip status ${error}`,

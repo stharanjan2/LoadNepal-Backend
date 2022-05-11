@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
-export class UpdateTrackDto {
+export class UpdateTripStatusDto {
   @IsNotEmpty()
-  readonly track: string;
+  readonly updateParamater: string;
   @IsNotEmpty()
   readonly trip_id: number;
 }

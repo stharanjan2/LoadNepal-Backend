@@ -14,6 +14,8 @@ import Distance from './entities/utils/distance';
 import { EditOrderDto } from './dto/edit-order-dto';
 import { LedgerService } from 'src/ledger/ledger.service';
 import { Ledger } from 'src/ledger/entities/ledger.entity';
+import { UpdateOrderStatusDto } from './dto/update.orderStatus.dto';
+import { NotificationService } from 'src/notification/notification.service';
 @Injectable()
 export class OrdersService {
   constructor(
@@ -21,6 +23,7 @@ export class OrdersService {
     private orderRepository: Repository<Order>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly notificationService: NotificationService,
     private readonly vehicleService: VehicleService,
     private readonly usersService: UsersService,
     private readonly ledgerService: LedgerService,
@@ -340,7 +343,74 @@ export class OrdersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  //FIXME As operation order.save() is behaving unlogically (i.e deleting trips of given order) had to go with this query builder implementation
+  async updateOrderStatus(updateParamater, body, _admin): Promise<any> {
+    try {
+      const adminId = _admin.userId;
+
+      const { orderId } = body;
+      const _order: Order = await this.findOrder(orderId);
+      const userId = _order.user;
+      let messageType = '';
+
+      switch (updateParamater) {
+        case 'accept':
+          _order.isAccepted = true;
+          // messageType = 'accepted';
+          await this.orderRepository
+            .createQueryBuilder()
+            .update(Order)
+            .set({ isAccepted: true })
+            .where('_id = :_id', { _id: _order._id })
+            .execute();
+        case 'confirm':
+          // _order.isConfirmed = true;
+          messageType = 'confirmed';
+          await this.orderRepository
+            .createQueryBuilder()
+            .update(Order)
+            .set({ isConfirmed: true })
+            .where('_id = :_id', { _id: _order._id })
+            .execute();
+          break;
+        case 'ship':
+          // _order.isShipped = true;
+          messageType = 'shipped';
+          await this.orderRepository
+            .createQueryBuilder()
+            .update(Order)
+            .set({ isShipped: true })
+            .where('_id = :_id', { _id: _order._id })
+            .execute();
+          break;
+
+        case 'destination':
+          // _order.isDestinationReached = true;
+          messageType = 'at destination';
+          await this.orderRepository
+            .createQueryBuilder()
+            .update(Order)
+            .set({ isDestinationReached: true })
+            .where('_id = :_id', { _id: _order._id })
+            .execute();
+          break;
+        default:
+      }
+
+      const notificationParamater = {
+        title: 'Admin',
+        message: `Your order id ${_order._id} is ${messageType}`,
+        type: `order_${updateParamater}`,
+        receiverId: userId,
+        senderId: adminId,
+      };
+      this.notificationService.sendNotification(notificationParamater, _admin);
+      return 'Order Status updated';
+    } catch (error) {
+      throw new HttpException(
+        `Error on updating trip status ${error}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

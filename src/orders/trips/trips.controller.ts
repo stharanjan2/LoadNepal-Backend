@@ -17,6 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from 'src/users/user.decorators';
 import { UpdateTrackDto } from './dto/update.track.dto';
 import { AddtripDto } from './dto/add-trip.dto';
+import { UpdateTripStatusDto } from './dto/update.tripStatus.dto';
 
 @Controller('api/test/')
 export class TripsController {
@@ -42,8 +43,8 @@ export class TripsController {
   @Patch('admin/addTrip')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
-  async addNewTrip(@Body() addTripDto: AddtripDto,@UserDecorator() _admin) {
-    return this.tripsService.addNewTrips(addTripDto,_admin);
+  async addNewTrip(@Body() addTripDto: AddtripDto, @UserDecorator() _admin) {
+    return this.tripsService.addNewTrips(addTripDto, _admin);
   }
 
   // @Post('admin/createTrips')
@@ -75,10 +76,15 @@ export class TripsController {
     return this.tripsService.viewAssignedTrips(body);
   }
 
-  @Post('admin/updateTripStatus')
+  @Patch('admin/updateTripStatus')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
-  async updateTripStatus(@Body() body, @UserDecorator() _admin) {}
+  async updateTripStatus(
+    @Body() updateTripstatusDto: UpdateTripStatusDto,
+    @UserDecorator() _admin,
+  ) {
+    return this.tripsService.updateTripStatus(updateTripstatusDto, _admin);
+  }
 
   // @Post('trips')
   // async getTrip(@Body() tripid) {

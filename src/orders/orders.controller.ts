@@ -17,6 +17,7 @@ import Role from 'src/users/role.enum';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { UserDecorator } from 'src/users/user.decorators';
 import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { UpdateOrderStatusDto } from './dto/update.orderStatus.dto';
 
 @ApiTags('orders')
 @Controller('api/test')
@@ -85,5 +86,17 @@ export class OrdersController {
     @UserDecorator() _user,
   ) {
     this.ordersService.acceptOrder(_orderId, _vehicle, _user);
+  }
+
+  //TODO better make bothy data in body or both in parmamater
+  @Patch('admin/updateOrderstatus/:updateParamater')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(JwtAuthGuard)
+  async updateTripStatus(
+    @Param('updateParamater') updateParamater,
+    @Body() body,
+    @UserDecorator() _admin,
+  ) {
+    return this.ordersService.updateOrderStatus(updateParamater, body, _admin);
   }
 }

@@ -10,6 +10,7 @@ import { UsersModule } from 'src/users/users.module';
 import { VehicleModule } from 'src/vehicle/vehicle.module';
 import { TripsModule } from './trips/trips.module';
 import { LedgerModule } from 'src/ledger/ledger.module';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { LedgerModule } from 'src/ledger/ledger.module';
     UsersModule,
     VehicleModule,
     LedgerModule,
+    NotificationModule,
     // TripsModule,
   ],
 
   controllers: [OrdersController],
   providers: [OrdersService],
-  exports: [OrdersService,TypeOrmModule],
+  exports: [OrdersService, TypeOrmModule],
 })
 export class OrdersModule {}
