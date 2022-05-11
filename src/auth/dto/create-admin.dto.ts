@@ -32,7 +32,7 @@ export class CreateAdminDto {
   @IsNotEmpty()
   readonly state: string;
   // readonly identification: string;
-  @IsNotEmpty()
+  // @IsNotEmpty()
   readonly pan: string;
   @IsNotEmpty()
   readonly roles: String;

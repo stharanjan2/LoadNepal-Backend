@@ -25,7 +25,7 @@ export class EditUserDto {
   //   @IsNumber()
   readonly phoneNumber: number;
 
-  // @IsNotEmpty()
+  @IsString()
   readonly pan: string;
 
   @IsNotEmpty()
