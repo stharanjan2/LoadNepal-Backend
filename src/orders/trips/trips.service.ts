@@ -72,13 +72,16 @@ export class TripsService {
     try {
       console.log('ADD trip dto', addTripDto);
       addTripDto.order_id = addTripDto._id;
-      const { total, due, advance, amount_paid } = addTripDto;
+      const { total, due, advance, amount_payed } = addTripDto;
       const _order: Order = await this.orderService.findOrder(
         addTripDto.order_id,
       );
+
+      // Due amount calculation
+      addTripDto.due = total - amount_payed;
+
       const userId = _order.user;
       const adminId = _admin.userId;
-
 
       //Check if noOfTrips exceeds noOfTruck
       if (_order.noOfTrips >= _order.noOfTruck) {
@@ -99,7 +102,7 @@ export class TripsService {
         totalAmount: total,
         totalAdvance: advance,
         totalDue: due,
-        totalPaid: amount_paid,
+        totalPaid: amount_payed,
       });
 
       const notificationParamater = {
@@ -212,6 +215,8 @@ export class TripsService {
         totalPaid = 0,
         totalAmount = 0; //Equal to total Price just diff variable name for ledger data
       for (let i = 0; i < noOfTrips; i++) {
+
+        trips[i].due = trips[i].total - trips[i].amount_payed;
         totalPrice += trips[i].total;
         totalAdvance += trips[i].advance;
         totalPaid += trips[i].amount_paid;
@@ -296,15 +301,32 @@ export class TripsService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      let totalPrice = 0;
+      let totalPrice = 0,
+        totalAdvance = 0,
+        totalDue = 0,
+        totalPaid = 0,
+        totalAmount = 0;
       for (let i = 0; i < noOfTrips; i++) {
         // totalPrice += trips[i].total;
         const tripId = trips[i]._id;
+        trips[i].due = trips[i].total - trips[i].amount_payed;
         const editedTrip = await this.editTrip(tripId, trips[i]);
         totalPrice += editedTrip.total;
+        totalAdvance += editedTrip.advance;
+        totalPaid += editedTrip.amount_payed;
+        totalDue += totalPrice - totalPaid;
       }
 
       await this.orderService.updatePrice(_order._id, totalPrice);
+
+      await this.ledgerService.updateLedgerAEDIT({
+        order: _order._id,
+        totalAmount: totalPrice,
+        totalAdvance: totalAdvance,
+        totalDue: totalDue,
+        totalPaid: totalPaid,
+      });
+
       // _order.price = totalPrice;
       // await _order.save();
       console.log('TRIPS EDITED SUCCESSFUL');

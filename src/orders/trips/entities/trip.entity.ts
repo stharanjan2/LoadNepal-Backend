@@ -60,7 +60,7 @@ export class Trip extends BaseEntity {
   payementMade: boolean;
 
   @Column({ default: 0 })
-  advance: Number;
+  advance: number;
 
   @Column({ default: 0 })
   total: number;

@@ -19,5 +19,5 @@ export class AddtripDto {
   @IsNotEmpty()
   advance: number;
   @IsNotEmpty()
-  amount_paid: any;
+  amount_payed: any;
 }

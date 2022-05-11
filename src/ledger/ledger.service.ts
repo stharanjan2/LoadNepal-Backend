@@ -37,8 +37,32 @@ export class LedgerService {
 
       console.log('Found ledger', toUpdateLedger);
       let updateLedger = Object.assign(toUpdateLedger, ledgerData);
+      // Need revision
       await toUpdateLedger.save();
       console.log('Available ledger is ', toUpdateLedger);
+    } catch (error) {
+      console.log('Error on finding ledger', error);
+    }
+  }
+
+  async updateLedgerAEDIT(ledgerData) {
+    try {
+      console.log('Data from backend-----', ledgerData);
+      const orderId = ledgerData.order;
+      const toUpdateLedger = await this.ledgerRepository.findOne({
+        where: { order: orderId },
+      });
+      delete ledgerData.orderId;
+
+      // ledgerData.totalAdvance += toUpdateLedger.totalAdvance;
+      // ledgerData.totalAmount += toUpdateLedger.totalAmount;
+      // ledgerData.totalDue += toUpdateLedger.totalDue;
+      // ledgerData.totalPaid += toUpdateLedger.totalPaid;
+
+      console.log('Found ledger', toUpdateLedger);
+      let updateLedger = Object.assign(toUpdateLedger, ledgerData);
+      await updateLedger.save();
+      console.log('Available ledger is ', updateLedger);
     } catch (error) {
       console.log('Error on finding ledger', error);
     }
