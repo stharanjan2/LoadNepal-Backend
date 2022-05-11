@@ -73,13 +73,15 @@ export class TripsService {
     try {
       console.log('ADD trip dto', addTripDto);
       addTripDto.order_id = addTripDto._id;
-      const { total, due, advance, amount_payed } = addTripDto;
+      const { total, advance, amount_payed } = addTripDto;
       const _order: Order = await this.orderService.findOrder(
         addTripDto.order_id,
       );
 
       // Due amount calculation
-      addTripDto.due = total - amount_payed;
+      const due = total - amount_payed;
+
+      addTripDto['due'] = due;
 
       const userId = _order.user;
       const adminId = _admin.userId;
@@ -219,7 +221,7 @@ export class TripsService {
         trips[i].due = trips[i].total - trips[i].amount_payed;
         totalPrice += trips[i].total;
         totalAdvance += trips[i].advance;
-        totalPaid += trips[i].amount_paid;
+        totalPaid += trips[i].amount_payed;
         totalDue += trips[i].due;
         totalAmount += trips[i].total;
 
