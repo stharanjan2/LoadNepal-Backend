@@ -108,7 +108,7 @@ export class TripsService {
 
       const notificationParamater = {
         title: 'Admin',
-        message: `Your trip id ${trip._id} of order id ${_order._id} has been accepted `,
+        message: `Your Trip No  ${trip._id} assigned to  Order No ${_order._id} has been accepted `,
         type: 'trip_accepted',
         receiverId: userId,
         senderId: adminId,
@@ -231,7 +231,7 @@ export class TripsService {
 
         const notificationParamater = {
           title: 'Admin',
-          message: `Your trip ${returnedTrip._id} of order ${_order._id} has been accepted `,
+          message: `Your Trip No  ${returnedTrip._id}  assigned to Order No ${_order._id} has been accepted `,
           type: 'trip_accepted',
           receiverId: userId,
           senderId: adminId,
@@ -341,7 +341,7 @@ export class TripsService {
     }
   }
 
-  //TODO bad firmating need to change later
+  //TODO bad formating add dto . need to change later
   async editTrip(tripId, tripUpdateParamater): Promise<Trip> {
     try {
       let toUpdateTrip = await this.tripRepository.findOne(tripId);
@@ -378,15 +378,31 @@ export class TripsService {
     }
   }
 
-  async updateTrackLocation(upateTrack: UpdateTrackDto) {
+  async updateTrackLocation(upateTrack: UpdateTrackDto, _admin): Promise<any> {
     try {
       const trackId = upateTrack.trip_id;
       const location = upateTrack.track;
-      let trackRecord = await this.tripRepository.findOne(trackId);
-      trackRecord.track = location;
+      const adminId = _admin.userId;
 
-      await trackRecord.save();
-      console.log('Updated Track ', trackRecord.track);
+      //Updating track location
+      let _trip = await this.tripRepository.findOne(trackId);
+      _trip.track = location;
+      await _trip.save();
+
+      //Sending track noticiation to user
+      const notificationParamater = {
+        title: 'Admin',
+        message: `Your trip id   ${_trip._id} of order id ${_trip.order} reached ${location} `,
+        type: 'order_shipped',
+        receiverId: _trip.user,
+        senderId: adminId,
+      };
+
+      await this.notificationService.sendNotification(notificationParamater, {
+        userId: adminId,
+      });
+      console.log('Updated Track ', _trip.track);
+      return `Successfully updated track to ${location}`;
     } catch (error) {
       console.log('Error while updating track', error);
       throw new HttpException(

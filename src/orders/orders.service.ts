@@ -404,6 +404,7 @@ export class OrdersService {
         receiverId: userId,
         senderId: adminId,
       };
+
       this.notificationService.sendNotification(notificationParamater, _admin);
       return 'Order Status updated';
     } catch (error) {

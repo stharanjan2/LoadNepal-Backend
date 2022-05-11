@@ -35,8 +35,8 @@ export class TripsController {
   @Patch('admin/updateTrack')
   @UseGuards(RoleGuard(Role.ADMIN))
   @UseGuards(JwtAuthGuard)
-  async updateLocation(@Body() updateTrackDto: UpdateTrackDto) {
-    return this.tripsService.updateTrackLocation(updateTrackDto);
+  async updateLocation(@Body() updateTrackDto: UpdateTrackDto,@UserDecorator() _admin) {
+    return this.tripsService.updateTrackLocation(updateTrackDto,_admin);
   }
 
   // Add new trips individually-----
@@ -85,6 +85,9 @@ export class TripsController {
   ) {
     return this.tripsService.updateTripStatus(updateTripstatusDto, _admin);
   }
+
+
+
 
   // @Post('trips')
   // async getTrip(@Body() tripid) {
