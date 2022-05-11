@@ -386,8 +386,12 @@ export class TripsService {
       const location = upateTrack.track;
       const adminId = _admin.userId;
 
+      console.log('TRIP', trackId, upateTrack);
+
       //Updating track location
-      let _trip = await this.tripRepository.findOne(trackId);
+      let _trip = await this.findTrip(trackId);
+      console.log('TRIP IS ', _trip);
+
       _trip.track = location;
       await _trip.save();
 
