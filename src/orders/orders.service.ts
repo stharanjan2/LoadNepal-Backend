@@ -248,6 +248,17 @@ export class OrdersService {
     return order;
   }
 
+  async findAllOrders(): Promise<Order[]> {
+    try {
+      return await Order.find({ order: { _id: 'ASC' }, loadRelationIds: true });
+    } catch (error) {
+      throw new HttpException(
+        `Error on getting all orders :${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async calculateDistance(createOrderDto: CreateOrderDto): Promise<number> {
     try {
       const { loadFrom, unloadTo } = createOrderDto;
@@ -273,7 +284,7 @@ export class OrdersService {
   //TODO change this to make more abstract and use repository pattern
   async adminViewAllOrders(): Promise<Order[]> {
     try {
-      return await Order.find({ order: { _id: 'ASC' } });
+      return this.findAllOrders();
     } catch (error) {
       throw new HttpException(
         `Error on fetching all orders ${error}`,
