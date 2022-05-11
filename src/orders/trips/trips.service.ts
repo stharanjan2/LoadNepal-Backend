@@ -47,8 +47,6 @@ export class TripsService {
 
   async findTrip(_tripId): Promise<Trip> {
     try {
-      console.log('TRIp IS', _tripId);
-
       const trip = await this.tripRepository.findOne({
         where: { _id: _tripId },
         loadRelationIds: true,
@@ -56,6 +54,28 @@ export class TripsService {
       if (!trip) {
         throw new HttpException(
           `No trip found with given id ${_tripId}`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return trip;
+    } catch (error) {
+      throw new HttpException(
+        `Error on finding trip ${error}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async findOrderTrips(_orderId): Promise<Trip[]> {
+    try {
+      const trip = await this.tripRepository.find({
+        where: { order: _orderId },
+        loadRelationIds: true,
+        order: { _id: 'ASC' },
+      });
+      if (!trip) {
+        throw new HttpException(
+          `No trips found with given order id  ${_orderId}`,
           HttpStatus.NOT_FOUND,
         );
       }
@@ -227,6 +247,7 @@ export class TripsService {
 
         trips[i].order = _order._id;
         trips[i].user = userId;
+        trips[i].isAccepted = true;
         const returnedTrip = await this.createTrip(trips[i], _order);
 
         _order.addTrips(returnedTrip);
@@ -363,10 +384,7 @@ export class TripsService {
       console.log('oRDER ID', body.orderId);
       const orderId = body.orderId;
 
-      const tripsRecord = await this.tripRepository.find({
-        order: orderId,
-        // where: { orderid: body.orderId },
-      });
+      const tripsRecord = await this.findOrderTrips(orderId);
       console.log('Assigned trips are', tripsRecord);
 
       return tripsRecord;
@@ -457,8 +475,8 @@ export class TripsService {
 
       const notificationParamater = {
         title: 'Admin',
-        message: `Your order is ${messageType}`,
-        type: `order_${updateParamater}`,
+        message: `Your Trip NO ${_trip._id} assigned to Order No ${_trip.order} is ${messageType}`,
+        type: `trip_${updateParamater}`,
         receiverId: userId,
         senderId: adminId,
       };
