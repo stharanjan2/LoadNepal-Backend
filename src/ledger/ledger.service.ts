@@ -61,7 +61,7 @@ export class LedgerService {
 
       console.log('Found ledger', toUpdateLedger);
       let updateLedger = Object.assign(toUpdateLedger, ledgerData);
-      await updateLedger.save();
+      await toUpdateLedger.save();
       console.log('Available ledger is ', updateLedger);
     } catch (error) {
       console.log('Error on finding ledger', error);

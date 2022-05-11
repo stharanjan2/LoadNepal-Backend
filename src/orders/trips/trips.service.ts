@@ -316,7 +316,7 @@ export class TripsService {
         totalPrice += editedTrip.total;
         totalAdvance += editedTrip.advance;
         totalPaid += editedTrip.amount_payed;
-        totalDue += totalPrice - totalPaid;
+        totalDue += editedTrip.due;
       }
 
       await this.orderService.updatePrice(_order._id, totalPrice);
