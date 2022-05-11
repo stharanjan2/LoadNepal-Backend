@@ -1,4 +1,5 @@
 import {
+  Allow,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -26,6 +27,7 @@ export class EditUserDto {
   readonly phoneNumber: number;
 
   @IsString()
+  @Allow()
   readonly pan: string;
 
   @IsNotEmpty()

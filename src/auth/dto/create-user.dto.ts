@@ -1,4 +1,5 @@
 import {
+  Allow,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -32,7 +33,8 @@ export class CreateUserDto {
   @IsNotEmpty()
   readonly state: string;
   // readonly identification: string;
-
+ 
+  @Allow()
   readonly pan: string;
   // @IsNotEmpty()
   // roles: Role;
