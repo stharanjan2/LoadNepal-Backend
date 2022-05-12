@@ -135,6 +135,7 @@ export class LedgerService {
           'ledger.totalPaid',
           'ledger.totalAdvance',
           'user.username',
+          'user._id',
         ])
         .orderBy('ledger._id', 'ASC')
 
