@@ -101,8 +101,51 @@ export class LedgerService {
     }
   }
 
-  findAll() {
-    return `This action returns all ledger`;
+  async findAllLedgers(): Promise<Ledger[]> {
+    try {
+      // const allLedgersRecords: Ledger[] = await this.ledgerRepository.find({
+      //   order: { _id: 'ASC' },
+      //   loadRelationIds: true,
+      // });
+      const allLedgersRecords: Ledger[] = await this.findAll();
+      return allLedgersRecords;
+    } catch (error) {
+      throw new HttpException(
+        `Error on fetching all transactions ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  async findAll(): Promise<Ledger[]> {
+    try {
+      const allLedgers = await this.ledgerRepository
+        .createQueryBuilder('ledger') // first argument is an alias. Alias is what you are selecting - photos. You must specify it.
+        .innerJoinAndSelect('ledger.user', 'user')
+        .innerJoinAndSelect('ledger.order', 'order')
+        .where(`order.isAccepted = true`)
+        .select([
+          'order._id',
+          'order.loadFrom',
+          'order.unloadTo',
+          'order.createdAt',
+          'order.updatedAt',
+          'ledger._id',
+          'ledger.totalAmount',
+          'ledger.totalDue',
+          'ledger.totalPaid',
+          'ledger.totalAdvance',
+          'user.username',
+        ])
+        .orderBy('ledger._id', 'ASC')
+
+        .getMany();
+      return allLedgers;
+    } catch (error) {
+      throw new HttpException(
+        `Error on fetching all ledger records ${error}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   findOne(id: number) {

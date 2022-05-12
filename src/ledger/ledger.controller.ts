@@ -32,4 +32,11 @@ export class LedgerController {
   async getLedger(@UserDecorator() _user) {
     return this.ledgerService.findLedger(_user);
   }
+
+  @Get('admin/getAllLedgers')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(JwtAuthGuard)
+  async getAllLedgers() {
+    return this.ledgerService.findAllLedgers();
+  }
 }

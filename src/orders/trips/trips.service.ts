@@ -449,10 +449,6 @@ export class TripsService {
       let messageType = '';
 
       switch (updateParamater) {
-        case 'accept':
-          _trip.isAccepted = true;
-          messageType = 'accepted';
-          break;
         case 'confirm':
           _trip.isConfirmed = true;
           messageType: 'confirmed';
@@ -468,7 +464,7 @@ export class TripsService {
         // case 'complete':
         //   _order.isCompleted = true;
         //   messageType = 'completed';
-        //   break;
+        //   break; 
         // default:
       }
       await _trip.save();
