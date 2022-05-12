@@ -33,9 +33,9 @@ export class Trip extends BaseEntity {
   @IsBoolean()
   isAccepted: boolean;
 
-  @Column({ type: 'boolean', default: false })
-  @IsBoolean()
-  isConfirmed: boolean;
+  // @Column({ type: 'boolean', default: false })
+  // @IsBoolean()
+  // isConfirmed: boolean;
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
@@ -57,7 +57,7 @@ export class Trip extends BaseEntity {
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
-  payementMade: boolean;
+  isPayementMade: boolean;
 
   @Column({ default: 0 })
   advance: number;
