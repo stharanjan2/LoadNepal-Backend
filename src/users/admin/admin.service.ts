@@ -15,7 +15,8 @@ export class AdminService {
 
   async getAllUsers(): Promise<Object> {
     const allUserAndDriver = await this.userService.findUsersByQuery({
-      roles: 'user',
+      where: { roles: 'user' },
+      order: { _id: 'ASC' },
     });
     console.log('ALL', allUserAndDriver);
     return { allusers: allUserAndDriver };
