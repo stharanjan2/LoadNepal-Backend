@@ -45,8 +45,8 @@ export class Order extends BaseEntity {
   @IsNotEmpty()
   noOfTruck: Number;
 
-  @Column({ nullable: true, default: 0 })
-  price: number;
+  // @Column({ nullable: true, default: 0 })
+  // price: number;
 
   @Column({ default: 0 })
   customerPrice: String;
@@ -59,8 +59,8 @@ export class Order extends BaseEntity {
   @IsNotEmpty()
   truckDetail: String;
 
-  @Column({ nullable: true })
-  distance: number;
+  // @Column({ nullable: true })
+  // distance: number;
 
   @IsNotEmpty()
   @ManyToOne(() => User, (user) => user.orders)
@@ -79,9 +79,9 @@ export class Order extends BaseEntity {
   @Column({ type: 'bigint', default: '0000000000' })
   customer_phoneNumber: number;
 
-  @Column({ type: 'boolean', default: false })
-  @IsBoolean()
-  isLocked: boolean;
+  // @Column({ type: 'boolean', default: false })
+  // @IsBoolean()
+  // isLocked: boolean;
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()
@@ -89,17 +89,17 @@ export class Order extends BaseEntity {
 
   //confirmed by admin/customer to transition from type 1 pending load to type 2 pending load
 
-  @Column({ type: 'boolean', default: false })
-  @IsBoolean()
-  isConfirmed: boolean;
+  // @Column({ type: 'boolean', default: false })
+  // @IsBoolean()
+  // isConfirmed: boolean;
 
-  @Column({ type: 'boolean', default: false })
-  @IsBoolean()
-  isShipped: boolean;
+  // @Column({ type: 'boolean', default: false })
+  // @IsBoolean()
+  // isShipped: boolean;
 
-  @Column({ type: 'boolean', default: false })
-  @IsBoolean()
-  isDestinationReached: boolean;
+  // @Column({ type: 'boolean', default: false })
+  // @IsBoolean()
+  // isDestinationReached: boolean;
 
   @Column({ type: 'boolean', default: false })
   @IsBoolean()

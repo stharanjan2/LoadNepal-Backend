@@ -270,7 +270,7 @@ export class TripsService {
       //FIXME need to add different route for accept order
 
       _order.isAccepted = true;
-      _order.price = totalPrice;
+      // _order.price = totalPrice;
       _order.noOfTrips = noOfTrips;
       await _order.save();
       console.log('ADMIN CREATEd TRIPS');
@@ -340,7 +340,7 @@ export class TripsService {
         totalDue += editedTrip.due;
       }
 
-      await this.orderService.updatePrice(_order._id, totalPrice);
+      // await this.orderService.updatePrice(_order._id, totalPrice);
 
       await this.ledgerService.updateLedgerAEDIT({
         order: _order._id,
@@ -449,10 +449,6 @@ export class TripsService {
       let messageType = '';
 
       switch (updateParamater) {
-        case 'confirm':
-          _trip.isConfirmed = true;
-          messageType: 'confirmed';
-
         case 'ship':
           _trip.isShipped = true;
           messageType = 'shipped';
@@ -464,7 +460,7 @@ export class TripsService {
         // case 'complete':
         //   _order.isCompleted = true;
         //   messageType = 'completed';
-        //   break; 
+        //   break;
         // default:
       }
       await _trip.save();

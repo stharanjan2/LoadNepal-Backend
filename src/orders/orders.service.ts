@@ -170,7 +170,7 @@ export class OrdersService {
 
       const orders = await this.orderRepository.find({
         user: user,
-        isDestinationReached: false,
+
         isAccepted: true,
       });
 
@@ -287,6 +287,9 @@ export class OrdersService {
   //TODO change this to make more abstract and use repository pattern
   async adminViewAllOrders(): Promise<Order[]> {
     try {
+      const all = await this.findAllOrders();
+      console.log('all', all);
+
       return this.findAllOrders();
     } catch (error) {
       throw new HttpException(
@@ -327,21 +330,21 @@ export class OrdersService {
     }
   }
 
-  async updatePrice(id: number | Number, price: number) {
-    try {
-      const updatedOrder = await this.orderRepository
-        .createQueryBuilder()
-        .update(Order)
-        .set({ price: price })
-        .where('_id = :_id', { _id: id })
-        .execute();
-    } catch (error) {
-      throw new HttpException(
-        `Problem in updating order  ${error}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
+  // async updatePrice(id: number | Number, price: number) {
+  //   try {
+  //     const updatedOrder = await this.orderRepository
+  //       .createQueryBuilder()
+  //       .update(Order)
+  //       .set({ price: price })
+  //       .where('_id = :_id', { _id: id })
+  //       .execute();
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       `Problem in updating order  ${error}`,
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 
   //FIXME As operation order.save() is behaving unlogically (i.e deleting trips of given order) had to go with this query builder implementation
   async updateOrderStatus(updateParamater, body, _admin): Promise<any> {
@@ -363,37 +366,38 @@ export class OrdersService {
             .set({ isAccepted: true })
             .where('_id = :_id', { _id: _order._id })
             .execute();
-        case 'confirm':
-          // _order.isConfirmed = true;
-          messageType = 'confirmed';
-          await this.orderRepository
-            .createQueryBuilder()
-            .update(Order)
-            .set({ isConfirmed: true })
-            .where('_id = :_id', { _id: _order._id })
-            .execute();
-          break;
-        case 'ship':
-          // _order.isShipped = true;
-          messageType = 'shipped';
-          await this.orderRepository
-            .createQueryBuilder()
-            .update(Order)
-            .set({ isShipped: true })
-            .where('_id = :_id', { _id: _order._id })
-            .execute();
-          break;
 
-        case 'destination':
+        // case 'ship':
+        //   // _order.isShipped = true;
+        //   messageType = 'shipped';
+        //   await this.orderRepository
+        //     .createQueryBuilder()
+        //     .update(Order)
+        //     .set({ isShipped: true })
+        //     .where('_id = :_id', { _id: _order._id })
+        //     .execute();
+        //   break;
+
+        case 'payement':
           // _order.isDestinationReached = true;
-          messageType = 'at destination';
+          messageType = 'payement made';
           await this.orderRepository
             .createQueryBuilder()
             .update(Order)
-            .set({ isDestinationReached: true })
+            .set({ isPayementMade: true })
             .where('_id = :_id', { _id: _order._id })
             .execute();
           break;
+        // case 'destination':
+        //   // _order.isDestinationReached = true;
+        //   messageType = 'at destination';
+        //   await this.orderRepository
+        //     .createQueryBuilder()
+        //     .update(Order)
+        //     .set({ isDestinationReached: true })
+        //     .where('_id = :_id', { _id: _order._id })
+        //     .execute();
+        //   break;
         default:
       }
 
