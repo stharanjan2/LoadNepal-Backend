@@ -16,10 +16,25 @@ import { AdminModule } from './users/admin/admin.module';
 import { NotificationModule } from './notification/notification.module';
 import { TripsModule } from './orders/trips/trips.module';
 import { LedgerModule } from './ledger/ledger.module';
+import { Otp } from './auth/otp/otp.entity';
+import { Trip } from './orders/trips/entities/trip.entity';
+import { Ledger } from './ledger/entities/ledger.entity';
+import { Notification } from './notification/entities/notification.entity';
+import { Vehicle } from './vehicle/vehicle.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: '78.46.105.179',
+      port: 3306,
+      username: 'loadnepa_testnest',
+      password: 'loadnepa_testnest',
+      database: 'loadnepa_test2',
+      entities: [User, Otp, Order, Trip, Notification, Ledger, Vehicle],
+      synchronize: true,
+      logging: false,
+    }),
     UsersModule,
     AdminModule,
     AuthModule,
@@ -35,5 +50,5 @@ import { LedgerModule } from './ledger/ledger.module';
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private connection: Connection) {}
+  // constructor(private connection: Connection) {}
 }
